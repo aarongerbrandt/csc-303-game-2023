@@ -31,13 +31,17 @@ To implement any specific kind of tank (player-controlled, enemy, etc.) we would
 
 The `KeyboardMovementController` would use WASD keys to control the tank's movement, and `MouseCannonController` would use the mouse's position in its aim-updating method and check for mouse clicks to tell if the cannon should fire.
 
-The `PassiveEnemyMovementController` might be used for very simple enemies. It periodically picks a direction, moves for a bit, then waits. The `DirectAimCannonController` is created with a reference to the object(s) it can target, if it has a clear line of sight to that target, it'll periodically fire bullets aimed directly at that target's current positon.
+The `PassiveMovementController` might be used for very simple enemies. It periodically picks a direction, moves for a bit, then waits. The `DirectAimCannonController` is created with a reference to the object(s) it can target, if it has a clear line of sight to that target, it'll periodically fire bullets aimed directly at that target's current positon.
 
 Creating enemies in this strategy can involve a bit of mix-and-match of different controllers. One enemy might combine the `DirectAim` controller with `PatrolMovement` to be more aggressive than the `Passive`/`Direct` combination described above.
 
 Creating a certain variety of tank, enemy or player, would just require calling the generic `Tank` constructor and passing in the appropriate controllers. Static methods are a fine way to handle this:
 ```Haxe
-static public CreateBeigeTankEnemy():Tank
+static public function CreateBeigeTankEnemy(X:Float, Y:Float):Tank {
+  var movementController = new PassiveMovementController();
+  var cannonController = new DirectAimCannonController();
+  return new Tank(X, Y, movementController, cannonController);
+}
 ```
 or we could get even fancier and load information from a text file about different enemies - make the game "moddable" right out of the box.
 
