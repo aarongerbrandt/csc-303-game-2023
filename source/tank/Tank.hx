@@ -7,6 +7,9 @@ import tank.controller.move.IMoveController;
 import tank.controller.shoot.IShootController;
 
 class Tank extends FlxSprite {
+	static inline public var BAKED_ROTATION_ANGLE_COUNT = 90;
+	static inline public var HITBOX_SIZE_ADJUSTMENT = .35;
+
 	public var bullets:FlxGroup;
 	public var cannon:FlxSprite;
 
@@ -17,16 +20,26 @@ class Tank extends FlxSprite {
 
 	public function new(X:Float, Y:Float) {
 		super(X, Y);
-		makeGraphic(24, 24);
+		initSelf();
 		initCannon();
 		initBullets();
+	}
+
+	private function initSelf() {
+		loadRotatedGraphic(AssetPaths.tank_body_placeholder__png, BAKED_ROTATION_ANGLE_COUNT, -1,
+			false, true);
+		var hitboxAdjustment = width * HITBOX_SIZE_ADJUSTMENT;
+		width -= hitboxAdjustment;
+		height -= hitboxAdjustment;
+		offset.add(hitboxAdjustment / 2, hitboxAdjustment / 2);
 	}
 
 	private function initCannon() {
 		cannon = new FlxSprite(x, y);
 		cannon.active = false;
-		cannon.loadRotatedGraphic(AssetPaths.tank_cannon_placeholder__png, 360);
-		cannon.offset.set((cannon.width - width) / 2, (cannon.height - height) / 2);
+		cannon.loadRotatedGraphic(AssetPaths.tank_cannon_placeholder__png,
+			BAKED_ROTATION_ANGLE_COUNT, -1, false, true);
+		cannon.offset.add((cannon.width - width) / 2, (cannon.height - height) / 2);
 		#if FLX_DEBUG
 		cannon.ignoreDrawDebug = true;
 		#end
@@ -69,6 +82,7 @@ class Tank extends FlxSprite {
 		#end
 		moveController.update(elapsed);
 		velocity.copyFrom(moveController.getVelocity());
+		angle = velocity.degrees;
 
 		shootController.update(elapsed);
 		aimDegrees = shootController.getAimDegrees();
@@ -78,8 +92,8 @@ class Tank extends FlxSprite {
 			// TODO: Actually implement firing a bullet, to be completed when bullet-shooting is done.
 		}
 
-		updateCannon();
 		super.update(elapsed);
+		updateCannon();
 	}
 
 	private function updateCannon() {
