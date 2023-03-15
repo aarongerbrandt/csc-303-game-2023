@@ -2,6 +2,7 @@ package tank;
 
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import lime.system.System;
 import tank.controller.move.IMoveController;
 import tank.controller.shoot.IShootController;
@@ -18,16 +19,16 @@ class Tank extends FlxSprite {
 	private var moveController:IMoveController;
 	private var shootController:IShootController;
 
-	public function new(X:Float, Y:Float) {
+	public function new(X:Float, Y:Float,
+			bodyGraphic:FlxGraphicAsset = AssetPaths.tank_body_placeholder__png) {
 		super(X, Y);
-		initSelf();
+		initSelf(bodyGraphic);
 		initCannon();
 		initBullets();
 	}
 
-	private function initSelf() {
-		loadRotatedGraphic(AssetPaths.tank_body_placeholder__png, BAKED_ROTATION_ANGLE_COUNT, -1,
-			false, true);
+	private function initSelf(staticGraphic:FlxGraphicAsset) {
+		loadRotatedGraphic(staticGraphic, BAKED_ROTATION_ANGLE_COUNT, -1, false, true);
 		var hitboxAdjustment = width * HITBOX_SIZE_ADJUSTMENT;
 		width -= hitboxAdjustment;
 		height -= hitboxAdjustment;
@@ -51,7 +52,8 @@ class Tank extends FlxSprite {
 	}
 
 	/**
-		Extra set-up step
+		Extra set-up step, anything that instantiates this should call `setControllers()` before
+		the class is actually used. 
 	**/
 	public function setControllers(MoveController:IMoveController,
 			ShootController:IShootController) {
@@ -88,7 +90,6 @@ class Tank extends FlxSprite {
 		aimDegrees = shootController.getAimDegrees();
 
 		if (shootController.shouldShoot()) {
-			trace('shot a bullet, wowee');
 			// TODO: Actually implement firing a bullet, to be completed when bullet-shooting is done.
 		}
 
