@@ -1,4 +1,6 @@
 # HUD and Menu Feature Proposal
+Implementer: Richard P.
+
 ## Planned Features
 - HUD: This will display things like number of enemy tanks, level numbers (if we end up with more than one level), etc.
 - Start Menu: This will be the initial screen and may have entries to start the game and possibly an options menu with stuff like volume controls.
