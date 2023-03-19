@@ -31,7 +31,7 @@ Assumed library versions are:
 * lime 8.0.0
 * openfl 9.2.0
 * flixel 5.2.2
-* flixel-addons:2.11.0
+* flixel-addons 2.11.0
 
 The game might compile successfully even with different dependency versions, but if you run into unexpected issues try switching your libraries to matching version using `haxelib install all` and/or `haxelib set`.
 
