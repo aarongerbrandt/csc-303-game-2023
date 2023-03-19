@@ -11,10 +11,18 @@ class TestState extends FlxState {
 	override public function create() {
 		super.create();
 		bgColor = FlxColor.WHITE;
+
+		setUpHorizontalTank();
+		setUpMouseFollowTanks();
+	}
+
+	private function setUpHorizontalTank() {
 		var tank = new Tank(300, 50);
 		tank.setControllers(new HorizontalMoveController(tank), new SpinShootController(tank));
 		add(tank.getAllSprites());
+	}
 
+	private function setUpMouseFollowTanks() {
 		for (x in 0...35) {
 			for (y in 0...10) {
 				var dumbTank = TankFactory.NewDumbTank(x * 50, y * 50);
