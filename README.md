@@ -1,4 +1,7 @@
 # CSC 303 Game 2023: Tanks for Nothin'
+[![Html5 Demo](https://github.com/SamBumgardner/csc-303-game-2023/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/SamBumgardner/csc-303-game-2023/actions/workflows/deploy-pages.yml)
+
+## About
 A game designed and programmed by the students of the Spring 2023 semester of MSU's CSC 303.
 
 It's our midterm project and our first 'real' game, so grade your expectations accordingly.
