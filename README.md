@@ -13,9 +13,11 @@ In the style of the Wii Play classic *Tanks*, our game pits a player-controlled 
 
 ## Features
 * A player-controlled tank
-* Mines
-* Bouncing bullets
-* ...and much, much more!
+* Enemy Tanks
+* Bouncing Bullets
+* Randomly Generated Levels
+* HUD and Menu
+* Mines (?)
 
 ## Contribution Guidelines
 To contribute to this project, please fork it and open pull requests from there back to this main repository.
@@ -28,9 +30,10 @@ This game is written in Haxe using the [HaxeFlixel framework](https://haxeflixel
 Assumed library versions are:
 * lime 8.0.0
 * openfl 9.2.0
-* flixel 5.2.1
+* flixel 5.2.2
+* flixel-addons:2.11.0
 
-The game might compile successfully even with different dependency versions, but if you run into unexpected issues try switching your libraries to matching version using `haxelib install` and/or `haxelib set`.
+The game might compile successfully even with different dependency versions, but if you run into unexpected issues try switching your libraries to matching version using `haxelib install all` and/or `haxelib set`.
 
 With correct versions in place, compile the game with
 ```
