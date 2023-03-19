@@ -1,0 +1,12 @@
+name: Build Haxe Lime HTML5 Target
+description: Use Lime to compile Haxe code for HTML5 Target
+runs:
+  using: composite
+  steps:
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.2.5
+    - shell: bash
+      run: haxelib install all --always --quiet
+    - shell: bash
+      run: haxelib run lime build html5
