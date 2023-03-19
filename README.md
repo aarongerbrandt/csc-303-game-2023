@@ -1,12 +1,12 @@
 # CSC 303 Game 2023: Tanks for Nothin'
 [![Html5 Demo](https://github.com/SamBumgardner/csc-303-game-2023/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/SamBumgardner/csc-303-game-2023/actions/workflows/deploy-pages.yml)
 
+[Play in your browser!](https://sambumgardner.github.io/csc-303-game-2023/)
+
 ## About
 A game designed and programmed by the students of the Spring 2023 semester of MSU's CSC 303.
 
 It's our midterm project and our first 'real' game, so grade your expectations accordingly.
-
-Play the game in your browser! (Link will be added post-project-completion)
 
 ## Summary
 In the style of the Wii Play classic *Tanks*, our game pits a player-controlled tank against overwhelming odds in a desperate fight for survival. Can you survive more levels than we're capable of implementing? Play to find out!
