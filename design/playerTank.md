@@ -19,10 +19,10 @@ Implementer: Quinn L.
 
 ## New Classes to Create
 * PlayerTank
-* KeyboardMovementController
-* MouseCannonController
-* GamepadMovementController(If there is time)
-* GamepadCannonController(If there is time)
+* KeyboardMoveController
+* MouseShootController
+* GamepadMoveController(If there is time)
+* GamepadShootController(If there is time)
 
 ## Additional Implementation Details
 * We're using the composition strategy so I'll be creating controller classes that the tank controllers will then use to create the player tank behavior.
@@ -30,7 +30,7 @@ Implementer: Quinn L.
 * I should try to build the PlayerTank class in a way that powerups or other modifyers can change the behavior of the player tank.
 
 ## How This Interacts with Other New Content
-* Should use the Fire method in the cannon controller classes
+* Should use the Fire method in the shoot controller classes
 * Should be dealt damage from bullets
 * Shouldn't collide with walls
 * Shouldn't collide with other tanks
