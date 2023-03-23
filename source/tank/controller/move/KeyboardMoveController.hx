@@ -4,46 +4,47 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 
 class KeyboardMoveController extends BaseController implements IMoveController {
-	public static var SPEED:Float = 50;
-
-	private var direction = 1;
+	public static var MAX_SPEED:Float = 50;
 
 	override public function update(elapsed:Float) {
-		if (this.velocity.y > 0 && this.y >= FlxG.height) {
-			this.y = 0;
+		// Screenwrap code
+		if (controlledTank.velocity.y > 0 && controlledTank.y >= FlxG.height) {
+			controlledTank.y = 0;
 		}
-		else if (this.velocity.y < 0 && (this.y + this.height) <= 0) {
-			this.y = FlxG.height;
+		else if (controlledTank.velocity.y < 0 && (controlledTank.y + controlledTank.height) <= 0) {
+			controlledTank.y = FlxG.height;
 		}
 
-		if (this.velocity.x > 0 && this.x >= FlxG.width) {
-			this.x = -(this.width);
+		if (controlledTank.velocity.x > 0 && controlledTank.x >= FlxG.width) {
+			controlledTank.x = -(controlledTank.width);
 		}
-		else if (this.velocity.x < 0 && (this.x + this.width) <= 0) {
-			this.x = FlxG.width;
+		else if (controlledTank.velocity.x < 0 && (controlledTank.x + controlledTank.width) <= 0) {
+			controlledTank.x = FlxG.width;
 		}
 
 		super.update(elapsed);
 	}
 
 	public function getVelocity():FlxPoint {
-		// Accelerate until max speed is reached
+		var xDirection = 0;
+		var yDirection = 0;
+
 		if (FlxG.keys.pressed.W) {
-			this.velocity.y - SPEED;
+			yDirection--;
 		}
 
 		if (FlxG.keys.pressed.S) {
-			this.velocity.y + SPEED;
+			yDirection++;
 		}
 
 		if (FlxG.keys.pressed.A) {
-			this.velocity.x - SPEED;
+			xDirection--;
 		}
 
 		if (FlxG.keys.pressed.D) {
-			this.velocity.x + SPEED;
+			xDirection++;
 		}
 
-		return FlxPoint.weak(SPEED * direction, 0);
+		return FlxPoint.weak(MAX_SPEED * xDirection, MAX_SPEED * yDirection);
 	}
 }

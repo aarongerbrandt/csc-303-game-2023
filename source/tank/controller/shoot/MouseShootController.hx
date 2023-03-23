@@ -1,5 +1,7 @@
 package tank.controller.shoot;
 
+import flixel.FlxG;
+
 class MouseShootController extends BaseController implements IShootController {
 	static inline public var AIM_ROTATE_RATE = 60;
 	static inline public var SHOOT_TIMER_MAX = .5;
@@ -8,7 +10,9 @@ class MouseShootController extends BaseController implements IShootController {
 	private var shootTimerRemaining:Float = SHOOT_TIMER_MAX;
 
 	override public function update(elapsed:Float):Void {
-		shootTimerRemaining -= elapsed;
+		if (shootTimerRemaining > 0) {
+			shootTimerRemaining -= elapsed;
+		}
 	}
 
 	public function getAimDegrees():Float {
@@ -16,7 +20,7 @@ class MouseShootController extends BaseController implements IShootController {
 	}
 
 	public function shouldShoot():Bool {
-		if (FlxG.mouse.justPressed || shootTimerRemaining < 0) {
+		if (FlxG.mouse.justPressed || shootTimerRemaining <= 0) {
 			shootTimerRemaining += SHOOT_TIMER_MAX;
 			return true;
 		}
