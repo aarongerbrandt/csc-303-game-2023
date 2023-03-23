@@ -15,7 +15,7 @@ class TestState extends FlxState {
 		bgColor = FlxColor.WHITE;
 
 		setUpHorizontalTank();
-		// setUpMouseFollowTanks();
+		setUpMouseFollowTanks();
 		setUpPlayerTank();
 	}
 
@@ -31,14 +31,14 @@ class TestState extends FlxState {
 		add(tank.getAllSprites());
 	}
 
-	// private function setUpMouseFollowTanks() {
-	// 	for (x in 0...35) {
-	// 		for (y in 0...10) {
-	// 			var dumbTank = TankFactory.NewDumbTank(x * 50, y * 50);
-	// 			add(dumbTank.getAllSprites());
-	// 		}
-	// 	}
-	// }
+	private function setUpMouseFollowTanks() {
+		for (x in 0...35) {
+			for (y in 0...10) {
+				var dumbTank = TankFactory.NewDumbTank(x * 50, y * 50);
+				add(dumbTank.getAllSprites());
+			}
+		}
+	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
