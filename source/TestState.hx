@@ -26,9 +26,8 @@ class TestState extends FlxState {
 	}
 
 	private function setUpPlayerTank() {
-		var tank = new Tank(100, 50);
-		tank.setControllers(new KeyboardMoveController(tank), new MouseShootController(tank));
-		add(tank.getAllSprites());
+		var playerTank = TankFactory.NewPlayerTank(100, 50);
+		add(playerTank.getAllSprites());
 	}
 
 	private function setUpMouseFollowTanks() {
