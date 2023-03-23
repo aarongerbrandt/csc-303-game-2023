@@ -22,7 +22,8 @@ private class Point {
  */
 class LevelGenerator {
 	// Defining static constants
-	private static var MIN_GAP_SIZE(default, never):Int = 2;
+	private static var MIN_Y_GAP_SIZE(default, never):Int = 3;
+	private static var MIN_X_GAP_SIZE(default, never):Int = 3;
 	private static var MIN_WALL_COUNT(default, never):Int = 5;
 	private static var MAX_WALL_COUNT(default, never):Int = 12;
 	private static var MIN_WALL_SIZE(default, never):Int = 4;
@@ -34,6 +35,12 @@ class LevelGenerator {
 	// Instantiating Instance Variables
 	private var mapWidth:Int;
 	private var mapHeight:Int;
+
+	private var minX:Int;
+	private var minY:Int;
+	private var maxX:Int;
+	private var maxY:Int;
+
 	private var map:Array<Array<Int>>;
 
 	public function new(?mapWidth:Int = 20, ?mapHeight:Int = 20) {
@@ -61,6 +68,12 @@ class LevelGenerator {
 	}
 
 	private function addBorders() {
+		// Define bounds for borders
+		this.minX = MIN_X_GAP_SIZE;
+		this.minY = MIN_Y_GAP_SIZE;
+		this.maxX = this.mapWidth - 1 - MIN_X_GAP_SIZE;
+		this.maxY = this.mapHeight - 1 - MIN_Y_GAP_SIZE;
+
 		// Add borders on sides
 		for (row in this.map) {
 			row[0] = BITMAP_WALL_BIT;
@@ -85,8 +98,8 @@ class LevelGenerator {
 			var finalPoint:Point = null;
 
 			while (!validPlacement) {
-				var startX:Int = random.int(MIN_GAP_SIZE, this.mapWidth - MIN_GAP_SIZE - 1);
-				var startY:Int = random.int(MIN_GAP_SIZE, this.mapHeight - MIN_GAP_SIZE - 1);
+				var startX:Int = random.int(this.minX, this.maxX);
+				var startY:Int = random.int(this.minY, this.maxY);
 				startingPoint = new Point(startX, startY);
 
 				// 0 - Up
@@ -110,28 +123,30 @@ class LevelGenerator {
 						null;
 				}
 
-				var validX:Bool = finalPoint.x > MIN_GAP_SIZE + 1
-					&& finalPoint.x < this.mapWidth - MIN_GAP_SIZE;
-
-				var validY:Bool = finalPoint.y > MIN_GAP_SIZE + 1
-					&& finalPoint.y < this.mapHeight - MIN_GAP_SIZE;
+				// Ensure end of wall is within bounds
+				var validX:Bool = finalPoint.x > this.minX && finalPoint.x < this.maxX;
+				var validY:Bool = finalPoint.y > this.minY && finalPoint.y < this.maxY;
 
 				validPlacement = validX && validY;
 			}
 
-			switch (direction) {
-				case 0 | 2: // Up/Down
-					for (y in startingPoint.y...finalPoint.y) {
-						this.map[y][startingPoint.x] = BITMAP_WALL_BIT;
-					}
-				case 1 | 3: // Left/Right
-					for (x in startingPoint.x...finalPoint.x) {
-						this.map[startingPoint.y][x] = BITMAP_WALL_BIT;
-					}
-				default:
-					trace("Unknown direction: " + direction);
-					return;
-			}
+			drawWall(startingPoint, finalPoint, direction);
+		}
+	}
+
+	private function drawWall(startingPoint:Point, finalPoint:Point, direction:Int) {
+		switch (direction) {
+			case 0 | 2: // Up/Down
+				for (y in startingPoint.y...finalPoint.y) {
+					this.map[y][startingPoint.x] = BITMAP_WALL_BIT;
+				}
+			case 1 | 3: // Left/Right
+				for (x in startingPoint.x...finalPoint.x) {
+					this.map[startingPoint.y][x] = BITMAP_WALL_BIT;
+				}
+			default:
+				trace("Unknown direction: " + direction);
+				return;
 		}
 	}
 }
