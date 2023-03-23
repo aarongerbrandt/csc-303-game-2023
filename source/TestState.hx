@@ -1,11 +1,11 @@
 package;
 
 import flixel.FlxState;
-import flixel.math.FlxVelocity;
 import flixel.util.FlxColor;
 import tank.Tank;
 import tank.TankFactory;
 import tank.controller.move.HorizontalMoveController;
+import tank.controller.move.PursuePlayerMovementController;
 import tank.controller.shoot.SpinShootController;
 
 class TestState extends FlxState {
@@ -13,7 +13,9 @@ class TestState extends FlxState {
 		super.create();
 		bgColor = FlxColor.WHITE;
 
-		setUpHorizontalTank();
+		var targetTank = setUpHorizontalTank();
+		setUpIdleTank1(targetTank);
+		setUpIdleTank2(targetTank);
 		setUpMouseFollowTanks();
 	}
 
@@ -21,7 +23,7 @@ class TestState extends FlxState {
 		var tank = new Tank(300, 50);
 		tank.setControllers(new HorizontalMoveController(tank), new SpinShootController(tank));
 		add(tank.getAllSprites());
-		return tank.getPosition();
+		return tank;
 	}
 
 	private function setUpMouseFollowTanks() {
@@ -31,14 +33,23 @@ class TestState extends FlxState {
 				add(dumbTank.getAllSprites());
 			}
 		}
-		var idleTank = TankFactory.NewIdleTank(100, 100);
+	}
+
+	private function setUpIdleTank1(targetTank) {
+		var idleTank = new Tank(100, 100);
+		idleTank.setControllers(new PursuePlayerMovementController(idleTank, targetTank),
+			new SpinShootController(idleTank));
 		add(idleTank.getAllSprites());
-		return idleTank;
+	}
+
+	private function setUpIdleTank2(targetTank) {
+		var idleTank = new Tank(300, 400);
+		idleTank.setControllers(new PursuePlayerMovementController(idleTank, targetTank),
+			new SpinShootController(idleTank));
+		add(idleTank.getAllSprites());
 	}
 
 	override public function update(elapsed:Float) {
-		// FlxVelocity.moveTowardsPoint(setUpMouseFollowTanks(), setUpHorizontalTank(), 20);
-
 		super.update(elapsed);
 	}
 }

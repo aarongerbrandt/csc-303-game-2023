@@ -1,7 +1,7 @@
-// for now, moves to a static point
 package tank.controller.move;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.math.FlxPoint;
 
 class PursuePlayerMovementController extends BaseController implements IMoveController {
@@ -9,9 +9,16 @@ class PursuePlayerMovementController extends BaseController implements IMoveCont
 
 	private var direction = 1;
 
+	private var targetTank:FlxObject;
+
+	public function new(controlledTank:Tank, target:FlxObject) {
+		super(controlledTank);
+		targetTank = target;
+	}
+
 	public function getVelocity():FlxPoint {
 		var result = FlxPoint.weak(1, 0);
-		var angleToTarget = controlledTank.getPosition().degreesTo((FlxPoint.weak(200, 200)));
+		var angleToTarget = controlledTank.getPosition().degreesTo(targetTank.getPosition());
 		return result.rotateByDegrees(angleToTarget).scale(SPEED);
 	}
 }
