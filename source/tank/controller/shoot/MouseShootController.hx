@@ -20,7 +20,7 @@ class MouseShootController extends BaseController implements IShootController {
 	}
 
 	public function shouldShoot():Bool {
-		if (FlxG.mouse.justPressed || shootTimerRemaining <= 0) {
+		if (FlxG.mouse.justPressed && shootTimerRemaining <= 0) {
 			shootTimerRemaining += SHOOT_TIMER_MAX;
 			return true;
 		}
