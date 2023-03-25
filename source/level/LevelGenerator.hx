@@ -1,19 +1,14 @@
 package level;
 
 import flixel.FlxG;
+import flixel.math.FlxPoint;
+import haxe.EnumTools;
 
-private class Point {
-	public var x:Int;
-	public var y:Int;
-
-	public function new(x:Int, y:Int) {
-		this.x = x;
-		this.y = y;
-	}
-
-	public function toString():String {
-		return this.x + " " + this.y;
-	}
+enum Direction {
+	Up;
+	Right;
+	Down;
+	Left;
 }
 
 /**
@@ -22,26 +17,19 @@ private class Point {
  */
 class LevelGenerator {
 	// Defining static constants
-	private static var MIN_Y_GAP_SIZE(default, never):Int = 3;
-	private static var MIN_X_GAP_SIZE(default, never):Int = 3;
-	private static var MIN_WALL_COUNT(default, never):Int = 5;
-	private static var MAX_WALL_COUNT(default, never):Int = 12;
-	private static var MIN_WALL_SIZE(default, never):Int = 4;
-	private static var MAX_WALL_SIZE(default, never):Int = 12;
+	private static var MIN_GAP_SIZE_Y(default, never):Int = 3;
+	private static var MIN_GAP_SIZE_X(default, never):Int = 3;
+	private static var WALL_COUNT_MIN(default, never):Int = 5;
+	private static var WALL_COUNT_MAX(default, never):Int = 12;
+	private static var WALL_SIZE_MIN(default, never):Int = 4;
+	private static var WALL_SIZE_MAX(default, never):Int = 12;
 
-	private static var BITMAP_EMPTY_BIT(default, never):Int = 0;
-	private static var BITMAP_WALL_BIT(default, never):Int = 1;
+	private static var BITMAP_INDEX_EMPTY(default, never):Int = 0;
+	private static var BITMAP_INDEX_WALL(default, never):Int = 1;
 
 	// Instantiating Instance Variables
 	private var mapWidth:Int;
 	private var mapHeight:Int;
-
-	private var minX:Int;
-	private var minY:Int;
-	private var maxX:Int;
-	private var maxY:Int;
-
-	private var map:Array<Array<Int>>;
 
 	public function new(?mapWidth:Int = 20, ?mapHeight:Int = 20) {
 		this.mapWidth = mapWidth;
@@ -53,96 +41,96 @@ class LevelGenerator {
 	 * @return Array<Array<Int>>	Level map
 	 */
 	public function generateLevel():Array<Array<Int>> {
-		instantiateMap();
-		addBorders();
-		addObstacles();
+		var map = instantiateMap();
+		map = addBordersToMap(map);
+		map = addObstaclesToMap(map);
 
-		return this.map;
+		return map;
 	}
 
 	/**
 	 * Populates this.map with an empty 2D Array with width and height specified previously
 	 */
-	private function instantiateMap() {
-		this.map = [for (x in 0...this.mapWidth) [for (y in 0...this.mapHeight) BITMAP_EMPTY_BIT]];
+	private function instantiateMap():Array<Array<Int>> {
+		return [for (x in 0...this.mapWidth) [for (y in 0...this.mapHeight) BITMAP_INDEX_EMPTY]];
 	}
 
-	private function addBorders() {
-		// Define bounds for borders
-		this.minX = MIN_X_GAP_SIZE;
-		this.minY = MIN_Y_GAP_SIZE;
-		this.maxX = this.mapWidth - 1 - MIN_X_GAP_SIZE;
-		this.maxY = this.mapHeight - 1 - MIN_Y_GAP_SIZE;
-
+	private function addBordersToMap(map:Array<Array<Int>>) {
 		// Add borders on sides
-		for (row in this.map) {
-			row[0] = BITMAP_WALL_BIT;
-			row[row.length - 1] = BITMAP_WALL_BIT;
+		for (row in map) {
+			row[0] = BITMAP_INDEX_WALL;
+			row[row.length - 1] = BITMAP_INDEX_WALL;
 		}
 
 		// Replace all items in first and last rows with walls
-		this.map[0] = [for (_ in 0...this.mapWidth) BITMAP_WALL_BIT];
-		this.map[this.map.length - 1] = [for (_ in 0...this.mapWidth) BITMAP_WALL_BIT];
+		map[0] = [for (_ in 0...this.mapWidth) BITMAP_INDEX_WALL];
+		map[map.length - 1] = [for (_ in 0...this.mapWidth) BITMAP_INDEX_WALL];
+
+		return map;
 	}
 
-	private function addObstacles() {
+	private function addObstaclesToMap(map:Array<Array<Int>>) {
+		// Define bounds for borders
+		var minX = MIN_GAP_SIZE_X;
+		var minY = MIN_GAP_SIZE_Y;
+		var maxX = this.mapWidth - 1 - MIN_GAP_SIZE_X;
+		var maxY = this.mapHeight - 1 - MIN_GAP_SIZE_Y;
+
 		var random = FlxG.random;
 
-		var numWalls:Int = random.int(MIN_WALL_COUNT, MAX_WALL_COUNT);
+		var numWalls:Int = random.int(WALL_COUNT_MIN, WALL_COUNT_MAX);
 		for (wall in 0...numWalls) {
 			var validPlacement:Bool = false;
 
-			var direction:Int = -1;
+			var direction:Direction = null;
 			var distance:Int;
-			var startingPoint:Point = null;
-			var finalPoint:Point = null;
+			var startingPoint:FlxPoint = null;
+			var finalPoint:FlxPoint = null;
 
 			while (!validPlacement) {
-				var startX:Int = random.int(this.minX, this.maxX);
-				var startY:Int = random.int(this.minY, this.maxY);
-				startingPoint = new Point(startX, startY);
-
-				// 0 - Up
-				// 1 - Right
-				// 2 - Down
-				// 3 - Up
-				direction = random.int(0, 3);
-				distance = random.int(MIN_WALL_SIZE, MAX_WALL_SIZE);
+				var startX:Int = random.int(minX, maxX);
+				var startY:Int = random.int(minY, maxY);
+				startingPoint = FlxPoint.weak(startX, startY);
+				direction = EnumTools.createByIndex(Direction, random.int(0, 3));
+				distance = random.int(WALL_SIZE_MIN, WALL_SIZE_MAX);
 
 				finalPoint = switch (direction) {
-					case 0: // Up
-						new Point(startingPoint.x, startingPoint.y + distance);
-					case 1: // Right
-						new Point(startingPoint.x + distance, startingPoint.y);
-					case 2: // Down
-						new Point(startingPoint.x, startingPoint.y - distance);
-					case 3: // Left
-						new Point(startingPoint.x - distance, startingPoint.y);
+					case Up:
+						FlxPoint.weak(startingPoint.x, startingPoint.y + distance);
+					case Right:
+						FlxPoint.weak(startingPoint.x + distance, startingPoint.y);
+					case Down:
+						FlxPoint.weak(startingPoint.x, startingPoint.y - distance);
+					case Left:
+						FlxPoint.weak(startingPoint.x - distance, startingPoint.y);
 					default:
 						trace("Invalid direction! " + direction);
 						null;
 				}
 
 				// Ensure end of wall is within bounds
-				var validX:Bool = finalPoint.x > this.minX && finalPoint.x < this.maxX;
-				var validY:Bool = finalPoint.y > this.minY && finalPoint.y < this.maxY;
+				var validX:Bool = finalPoint.x > minX && finalPoint.x < maxX;
+				var validY:Bool = finalPoint.y > minY && finalPoint.y < maxY;
 
 				validPlacement = validX && validY;
 			}
 
-			drawWall(startingPoint, finalPoint, direction);
+			drawWall(map, startingPoint, finalPoint, direction);
 		}
+
+		return map;
 	}
 
-	private function drawWall(startingPoint:Point, finalPoint:Point, direction:Int) {
+	private function drawWall(map:Array<Array<Int>>, startingPoint:FlxPoint, finalPoint:FlxPoint,
+			direction:Direction) {
 		switch (direction) {
-			case 0 | 2: // Up/Down
-				for (y in startingPoint.y...finalPoint.y) {
-					this.map[y][startingPoint.x] = BITMAP_WALL_BIT;
+			case Up | Down:
+				for (y in Std.int(startingPoint.y)...Std.int(finalPoint.y)) {
+					map[y][Std.int(startingPoint.x)] = BITMAP_INDEX_WALL;
 				}
-			case 1 | 3: // Left/Right
-				for (x in startingPoint.x...finalPoint.x) {
-					this.map[startingPoint.y][x] = BITMAP_WALL_BIT;
+			case Right | Left:
+				for (x in Std.int(startingPoint.x)...Std.int(finalPoint.x)) {
+					map[Std.int(startingPoint.y)][x] = BITMAP_INDEX_WALL;
 				}
 			default:
 				trace("Unknown direction: " + direction);
