@@ -6,8 +6,6 @@ import tank.Tank;
 import tank.TankFactory;
 import tank.controller.move.DynamicMovementController;
 import tank.controller.move.HorizontalMoveController;
-import tank.controller.move.PursuePlayerMovementController;
-import tank.controller.shoot.AutoAimController;
 import tank.controller.shoot.SpinShootController;
 
 class TestState extends FlxState {
@@ -20,6 +18,7 @@ class TestState extends FlxState {
 		setUpPursuitTank2(targetTank);
 		setUpDynamicTank(targetTank);
 		setUpMouseFollowTanks();
+		setUpPlayerTank();
 	}
 
 	private function setUpHorizontalTank() {
@@ -27,6 +26,11 @@ class TestState extends FlxState {
 		tank.setControllers(new HorizontalMoveController(tank), new SpinShootController(tank));
 		add(tank.getAllSprites());
 		return tank;
+	}
+
+	private function setUpPlayerTank() {
+		var playerTank = TankFactory.NewPlayerTank(100, 50);
+		add(playerTank.getAllSprites());
 	}
 
 	private function setUpMouseFollowTanks() {

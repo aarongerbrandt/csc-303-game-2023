@@ -84,7 +84,9 @@ class Tank extends FlxSprite {
 		#end
 		moveController.update(elapsed);
 		velocity.copyFrom(moveController.getVelocity());
-		angle = velocity.degrees;
+		if (velocity.length > 0) {
+			angle = velocity.degrees;
+		}
 
 		shootController.update(elapsed);
 		aimDegrees = shootController.getAimDegrees();

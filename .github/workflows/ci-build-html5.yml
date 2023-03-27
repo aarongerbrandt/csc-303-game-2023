@@ -1,6 +1,8 @@
 name: HTML5 Continuous Integration Build
 run-name: ${{ github.actor }} Build ${{ github.ref }} 
-on: [push]
+on: 
+  - push
+  - pull_request_target
 jobs:
   Compile-html5:
     runs-on: ubuntu-latest

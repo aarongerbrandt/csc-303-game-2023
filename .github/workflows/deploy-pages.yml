@@ -1,4 +1,4 @@
-name: Deploy Html5 Demo to GitHub Pages
+name: Deploy HTML5 Demo
 on:
   push:
     branches: ["main"]
