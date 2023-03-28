@@ -22,6 +22,14 @@ class TestGenState extends FlxState {
 		map.loadMapFrom2DArray(bitmap, AssetPaths.Wall__png, TILE_WIDTH, TILE_HEIGHT);
 
 		add(map);
+
+		/**
+			Loading the hud here to test for display.
+			Don't push this anywhere but hudDesign branch.
+		**/
+		var hud = new HUD();
+
+		add(hud);
 	}
 
 	override public function update(elapsed:Float) {
