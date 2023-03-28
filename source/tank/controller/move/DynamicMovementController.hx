@@ -1,10 +1,14 @@
 package tank.controller.move;
 
+import flixel.FlxG.random;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 class DynamicMovementController extends BaseController implements IMoveController {
+	private var idleTimer:Float = 0;
+
 	public static var SPEED:Float = 50;
 
 	private var direction = 1;
@@ -14,18 +18,23 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 	private var point:FlxPoint = FlxPoint.weak(100, 100);
 
 	var distance:Float;
+	var dx:Float;
+	var dy:Float;
 
 	public function new(controlledTank:Tank, target:FlxObject) {
 		super(controlledTank);
 		targetTank = target;
 	}
 
-	private function getDistance(controlled:Tank, target:FlxObject) {
-		distance = (targetTank.getPosition().x) - (controlledTank.getPosition().x);
+	private function distanceToTarget():Float {
+		var dx = (controlledTank.x - targetTank.x);
+		var dy = (controlledTank.y - targetTank.y);
+		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 
+	// idleState is true while distance is too big--then false ie "chase" mode when distance is within given range
 	override public function update(elapsed:Float) {
-		idleState = (distance < 30);
+		idleState = (distanceToTarget() > 300); // this logic can be changed w line of sight jazz
 	}
 
 	private function idle():FlxPoint {
@@ -35,7 +44,6 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		else if (controlledTank.y < 0) {
 			direction = 1;
 		}
-
 		return FlxPoint.weak(0, SPEED * direction);
 	}
 
@@ -54,9 +62,3 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		}
 	}
 }
-/* update function needs to change what type of direction is returned
-	-idle movement: random direction, random time (within range of seconds), pause
-	-pursuit movement: angleToTarget from PursuePlayer
-
-	getVelocity will return velocity vector, either random or pursuit based on update designation
- */
