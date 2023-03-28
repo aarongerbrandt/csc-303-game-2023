@@ -22,14 +22,13 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 			FlxG.height - HUD_HEIGHT).makeGraphic(FlxG.width, HUD_HEIGHT, FlxColor.GRAY);
 		add(background);
 
-		/* var tanksDestroyedIcon:FlxSprite;
-			tanksDestroyedIcon = new FlxSprite(15, (tanksDestroyedIcon))
-			add(tanksDestroyedIcon); */
-		/**
-			My current plan is to use math to figure the halfway point of the background and of the
-			graphic to center them together. That way changes in the graphic and background
-			heights will recenter them together.  I still don't like the way this is going to look
-			when it's done, but need to get it working first.
-		**/
+		var tanksDestroyedIcon = new FlxSprite(8, (background.y + (background.height / 2) - 8));
+		add(tanksDestroyedIcon);
+
+		tanksDestroyedCounter = new FlxText((tanksDestroyedIcon.x + 16), tanksDestroyedIcon.y, 0,
+			"BOOM", 16);
+		trace(tanksDestroyedCounter.size, tanksDestroyedCounter.height);
+		tanksDestroyedCounter.color = FlxColor.RED;
+		add(tanksDestroyedCounter);
 	}
 }
