@@ -25,7 +25,6 @@ class TestGenState extends FlxState {
 
 		/**
 			Loading the hud here to test for display.
-			Don't push this anywhere but hudDesign branch.
 		**/
 		var hud = new HUD();
 
