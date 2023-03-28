@@ -6,6 +6,8 @@ import tank.Tank;
 import tank.TankFactory;
 import tank.controller.move.DynamicMovementController;
 import tank.controller.move.HorizontalMoveController;
+import tank.controller.move.PursuePlayerMovementController;
+import tank.controller.shoot.AutoAimController;
 import tank.controller.shoot.SpinShootController;
 
 class TestState extends FlxState {
