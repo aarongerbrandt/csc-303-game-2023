@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.tile.FlxTilemap;
 
 class DynamicMovementController extends BaseController implements IMoveController {
 	private var idleTimer:Float = 0;
@@ -21,9 +22,14 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 	var dx:Float;
 	var dy:Float;
 
-	public function new(controlledTank:Tank, target:FlxObject) {
+	var map:FlxTilemap;
+
+	var targetInLineOfSight:Bool;
+
+	public function new(controlledTank:Tank, target:FlxObject, tileMap:FlxTilemap) {
 		super(controlledTank);
 		targetTank = target;
+		map = tileMap;
 	}
 
 	private function distanceToTarget():Float {
@@ -32,9 +38,15 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 
+	private function canSeeTarget():Bool {
+		targetInLineOfSight = map.ray(controlledTank.getPosition(), targetTank.getPosition());
+		return targetInLineOfSight;
+	}
+
 	// idleState is true while distance is too big--then false ie "chase" mode when distance is within given range
 	override public function update(elapsed:Float) {
-		idleState = (distanceToTarget() > 300); // this logic can be changed w line of sight jazz
+		// idleState = (distanceToTarget() > 300); // this logic can be changed w line of sight jazz
+		idleState = !(canSeeTarget());
 	}
 
 	private function idle():FlxPoint {

@@ -33,7 +33,7 @@ class TestGenState extends FlxState {
 		var targetTank = setUpHorizontalTank();
 		// setUpPursuitTank1(targetTank);
 		// setUpPursuitTank2(targetTank);
-		setUpDynamicTank(targetTank);
+		setUpDynamicTank(targetTank, map);
 		setUpPlayerTank();
 	}
 
@@ -62,9 +62,9 @@ class TestGenState extends FlxState {
 				new AutoAimController(pursuitTank, targetTank));
 			add(pursuitTank.getAllSprites());
 	}*/
-	private function setUpDynamicTank(targetTank) {
+	private function setUpDynamicTank(targetTank, tileMap) {
 		var dynamicTank = new Tank(50, 500);
-		dynamicTank.setControllers(new DynamicMovementController(dynamicTank, targetTank),
+		dynamicTank.setControllers(new DynamicMovementController(dynamicTank, targetTank, tileMap),
 			new AutoAimController(dynamicTank, targetTank));
 		add(dynamicTank.getAllSprites());
 	}
