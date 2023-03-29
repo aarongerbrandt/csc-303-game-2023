@@ -27,23 +27,15 @@ class LevelGenerator {
 	private static var BITMAP_INDEX_EMPTY(default, never):Int = 0;
 	private static var BITMAP_INDEX_WALL(default, never):Int = 1;
 
-	// Instantiating Instance Variables
-	private var mapWidth:Int;
-	private var mapHeight:Int;
-
-	public function new(?mapWidth:Int = 20, ?mapHeight:Int = 20) {
-		this.mapWidth = mapWidth;
-		this.mapHeight = mapHeight;
-	}
-
 	/**
 	 * Creates a randomly generated level in the form of a 2D Array
 	 * @return Array<Array<Int>>	Level map
 	 */
-	public function generateLevel():Array<Array<Int>> {
-		var map = instantiateMap();
-		map = addBordersToMap(map);
-		map = addObstaclesToMap(map);
+	public static function generateLevel(?mapWidth:Int = 20,
+			?mapHeight:Int = 20):Array<Array<Int>> {
+		var map = instantiateMap(mapWidth, mapHeight);
+		map = addBordersToMap(map, mapWidth, mapHeight);
+		map = addObstaclesToMap(map, mapWidth, mapHeight);
 
 		return map;
 	}
@@ -51,11 +43,11 @@ class LevelGenerator {
 	/**
 	 * Populates this.map with an empty 2D Array with width and height specified previously
 	 */
-	private function instantiateMap():Array<Array<Int>> {
-		return [for (x in 0...this.mapWidth) [for (y in 0...this.mapHeight) BITMAP_INDEX_EMPTY]];
+	private static function instantiateMap(mapWidth:Int, mapHeight:Int):Array<Array<Int>> {
+		return [for (x in 0...mapWidth) [for (y in 0...mapHeight) BITMAP_INDEX_EMPTY]];
 	}
 
-	private function addBordersToMap(map:Array<Array<Int>>) {
+	private static function addBordersToMap(map:Array<Array<Int>>, mapWidth:Int, mapHeight:Int) {
 		// Add borders on sides
 		for (row in map) {
 			row[0] = BITMAP_INDEX_WALL;
@@ -63,18 +55,18 @@ class LevelGenerator {
 		}
 
 		// Replace all items in first and last rows with walls
-		map[0] = [for (_ in 0...this.mapWidth) BITMAP_INDEX_WALL];
-		map[map.length - 1] = [for (_ in 0...this.mapWidth) BITMAP_INDEX_WALL];
+		map[0] = [for (_ in 0...mapWidth) BITMAP_INDEX_WALL];
+		map[map.length - 1] = [for (_ in 0...mapWidth) BITMAP_INDEX_WALL];
 
 		return map;
 	}
 
-	private function addObstaclesToMap(map:Array<Array<Int>>) {
+	private static function addObstaclesToMap(map:Array<Array<Int>>, mapWidth:Int, mapHeight:Int) {
 		// Define bounds for borders
 		var minX = MIN_GAP_SIZE_X;
 		var minY = MIN_GAP_SIZE_Y;
-		var maxX = this.mapWidth - 1 - MIN_GAP_SIZE_X;
-		var maxY = this.mapHeight - 1 - MIN_GAP_SIZE_Y;
+		var maxX = mapWidth - 1 - MIN_GAP_SIZE_X;
+		var maxY = mapHeight - 1 - MIN_GAP_SIZE_Y;
 
 		var random = FlxG.random;
 
@@ -121,8 +113,8 @@ class LevelGenerator {
 		return map;
 	}
 
-	private function drawWall(map:Array<Array<Int>>, startingPoint:FlxPoint, finalPoint:FlxPoint,
-			direction:Direction) {
+	private static function drawWall(map:Array<Array<Int>>, startingPoint:FlxPoint,
+			finalPoint:FlxPoint, direction:Direction) {
 		switch (direction) {
 			case Up | Down:
 				for (y in Std.int(startingPoint.y)...Std.int(finalPoint.y)) {
