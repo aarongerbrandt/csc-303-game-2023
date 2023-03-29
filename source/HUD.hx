@@ -22,28 +22,39 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 
 		setupBackground();
 		setupTanksDestroyed();
+	}
 
-		/* var background = new FlxSprite(0,
-				FlxG.height - HUD_HEIGHT).makeGraphic(FlxG.width, HUD_HEIGHT, FlxColor.GRAY);
-			add(background);
+	function setupBackground() {
+		background = new FlxSprite(0, FlxG.height - HUD_HEIGHT);
+		background.makeGraphic(FlxG.width, HUD_HEIGHT, FlxColor.GRAY);
+		add(background);
+	}
 
-			var tanksDestroyedIcon = new FlxSprite(8, (background.y + (background.height / 2) - 8));
-			add(tanksDestroyedIcon);
+	function setupTanksDestroyed() {
+		tanksDestroyedIcon = new FlxSprite(0, 0, AssetPaths.place__png);
+		tanksDestroyedIcon.x = tanksDestroyedIcon.width / 2;
+		tanksDestroyedIcon.y = background.y
+			+ (background.height / 2)
+			- (tanksDestroyedIcon.height / 2);
 
-			tanksDestroyedCounter = new FlxText((tanksDestroyedIcon.x + 16), tanksDestroyedIcon.y, 0,
-				"BOOM", 16);
-			trace(tanksDestroyedCounter.size, tanksDestroyedCounter.height);
-			tanksDestroyedCounter.color = FlxColor.RED;
-			add(tanksDestroyedCounter); */
+		tanksDestroyedCounter = new FlxText();
+		tanksDestroyedCounter.x = tanksDestroyedIcon.x + 16;
+		// Still need to change this one.  Probably make it match with the x value spacing.
 
-		function setBackground() {
-			background = new FlxSprite(0,
-				FlxG.height - HUD_HEIGHT).makeGraphic(FlxG.width, HUD_HEIGHT, FlxColor.GRAY);
-		}
+		tanksDestroyedCounter.y = tanksDestroyedIcon.getGraphicMidpoint().y
+			- ((tanksDestroyedIcon.height / 4) + (tanksDestroyedCounter.height / 2));
+		tanksDestroyedCounter.text = "BOOM!";
+		tanksDestroyedCounter.size = 16; // Make this one a static once everything works.
 
-		function setupTanksDestroyed() {
-			tanksDestroyedIcon = new FlxSprite();
-			/**Need to figure out midpoint.  I'll need to combine it with some manual mathing to get things to align properly.**/
-		}
+		tanksDestroyedCounter.color = FlxColor.RED;
+
+		add(tanksDestroyedIcon);
+		add(tanksDestroyedCounter);
+
+		/**
+			Still working on figuring out how to align. I'm closer than I was.
+			When background height changes, it stays aligned, but when the font size is changed, it
+			goes all out of whack.
+		**/
 	}
 }
