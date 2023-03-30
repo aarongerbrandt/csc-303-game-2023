@@ -37,6 +37,14 @@ class TestGenState extends FlxState {
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
+
+		if (FlxG.keys.justReleased.H) {
+			enemyTanks.getFirstAlive().kill();
+		}
+
+		if (enemyTanks.countLiving() < 1) {
+			FlxG.switchState(new StartMenuState());
+		}
 	}
 
 	private function addTanks() {
