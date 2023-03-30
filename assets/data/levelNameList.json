@@ -1,5 +1,5 @@
 {
-    "levelNamePrefix": [
+    "levelNamePrefixList": [
         "ACID",
         "AMAZING",
         "AWOKEN",
@@ -94,7 +94,7 @@
         "YEARLY",
         "YELLOW"
     ],
-    "levelNameSuffix": [
+    "levelNameSuffixList": [
         "ACID",
         "ADVENTURES",
         "ANUBIS",
