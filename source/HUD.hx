@@ -7,7 +7,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
 class HUD extends FlxTypedGroup<FlxSprite> {
-	static inline var HUD_HEIGHT:Int = 25;
+	static inline var HUD_HEIGHT:Int = 24;
 
 	var background:FlxSprite;
 	var tanksDestroyedIcon:FlxSprite;
