@@ -2,7 +2,9 @@ package level;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup;
+import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import level.LevelGenerator;
 import projectile.Projectile;
@@ -22,6 +24,9 @@ class TestGenState extends FlxState {
 	private var playerTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
+	private var testBullet:SimpleBullet;
+	private var testBulletGroup:FlxGroup;
+
 	override public function create() {
 		super.create();
 
@@ -32,6 +37,8 @@ class TestGenState extends FlxState {
 
 		add(map);
 		addTanks();
+
+		initBulletTest();
 	}
 
 	override public function update(elapsed:Float) {
@@ -40,28 +47,15 @@ class TestGenState extends FlxState {
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
 
-		FlxG.collide(playerTank.bullets, map, function onCollision(bullets, map) {
-			bullets.impact("map");
-		});
-		FlxG.collide(playerTank.bullets, enemyTanks, function onCollision(bullets, enemyTank) {
-			bullets.impact("tank");
-		});
-		FlxG.collide(playerTank.bullets, playerTank, function onCollision(bullets, playerTank) {
-			bullets.impact("tank");
-		});
-
+		doBulletCollision(playerTank.bullets);
 		for (tank in enemyTanks) {
-			FlxG.collide(tank.bullets, map, function onCollision(bullets, map) {
-				bullets.impact("map");
-			});
+			doBulletCollision(tank.bullets);
+		}
 
-			FlxG.collide(tank.bullets, enemyTanks, function onCollision(bullets, enemyTank) {
-				bullets.impact("tank");
-			});
+		doBulletCollision(testBulletGroup);
 
-			FlxG.collide(tank.bullets, playerTank, function onCollision(bullets, playerTank) {
-				bullets.impact("tank");
-			});
+		if (FlxG.mouse.justPressed) {
+			testBullet.fire(FlxG.mouse.getPosition(), 135);
 		}
 	}
 
@@ -79,5 +73,24 @@ class TestGenState extends FlxState {
 		for (enemyTank in enemyTanks) {
 			add(enemyTank.getAllSprites());
 		}
+	}
+
+	private function doBulletCollision(bullets:FlxGroup) {
+		FlxG.collide(bullets, map, function onCollision(bullets, map) {
+			bullets.impact("map");
+		});
+		FlxG.collide(bullets, enemyTanks, function onCollision(bullets, enemyTank) {
+			bullets.impact("tank");
+		});
+		FlxG.collide(bullets, playerTank, function onCollision(bullets, playerTank) {
+			bullets.impact("tank");
+		});
+	}
+
+	private function initBulletTest() {
+		testBullet = new SimpleBullet();
+		testBulletGroup = new FlxGroup();
+		testBulletGroup.add(testBullet);
+		add(testBullet);
 	}
 }

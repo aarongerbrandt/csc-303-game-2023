@@ -10,7 +10,7 @@ class Projectile extends FlxSprite {
 
 	public function new() {
 		super(FlxG.width, FlxG.height);
-		makeGraphic(10, 10, FlxColor.BLACK);
+		makeGraphic(10, 10, FlxColor.WHITE);
 		kill();
 	}
 
