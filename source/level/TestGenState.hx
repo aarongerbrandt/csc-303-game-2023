@@ -20,6 +20,8 @@ class TestGenState extends FlxState {
 	private var playerTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
+	private var bullets:FlxTypedGroup<FlxGroup>;
+
 	override public function create() {
 		super.create();
 
@@ -37,16 +39,31 @@ class TestGenState extends FlxState {
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
+
+		FlxG.collide(bullets, map, function onCollision(bullets, map) {
+			bullets.impact("map");
+		});
+		FlxG.collide(bullets, playerTank, function onCollision(bullets, playerTank) {
+			bullets.impact("tank");
+		});
+		FlxG.collide(bullets, enemyTanks, function onCollision(bullets, enemyTanks) {
+			bullets.impact("tank");
+		});
+		FlxG.collide(bullets, bullets, function onCollision(bullets, bullets) {
+			bullets.impact("projectile");
+		});
 	}
 
 	private function addTanks() {
 		var tankCoordinates = [250, 300, 350];
 		playerTank = TankFactory.NewPlayerTank(500, 500);
+		bullets.add(playerTank.bullets);
 
 		enemyTanks = new FlxTypedGroup<Tank>(3);
 		for (x in tankCoordinates) {
 			var enemy = TankFactory.NewDumbTank(x, 50);
 			enemyTanks.add(enemy);
+			bullets.add(enemy.bullets);
 		}
 
 		add(playerTank.getAllSprites());
