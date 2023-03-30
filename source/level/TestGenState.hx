@@ -76,14 +76,17 @@ class TestGenState extends FlxState {
 	}
 
 	private function doBulletCollision(bullets:FlxGroup) {
-		FlxG.collide(bullets, map, function onCollision(bullets, map) {
-			bullets.impact("map");
+		FlxG.collide(bullets, map, function onOverlap(bullets, map) {
+			bullets.impact("wall");
 		});
-		FlxG.collide(bullets, enemyTanks, function onCollision(bullets, enemyTank) {
+		FlxG.overlap(bullets, enemyTanks, function onOverlap(bullets, enemyTank) {
 			bullets.impact("tank");
 		});
-		FlxG.collide(bullets, playerTank, function onCollision(bullets, playerTank) {
+		FlxG.overlap(bullets, playerTank, function onOverlap(bullets, playerTank) {
 			bullets.impact("tank");
+		});
+		FlxG.overlap(bullets, null, function onOverlap(bullets, na) {
+			bullets.impact("projectile");
 		});
 	}
 
