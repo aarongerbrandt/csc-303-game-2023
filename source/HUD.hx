@@ -8,6 +8,9 @@ import flixel.util.FlxColor;
 
 class HUD extends FlxTypedGroup<FlxSprite> {
 	static inline var HUD_HEIGHT:Int = 24;
+	static inline var HUD_COLOR = FlxColor.GRAY;
+	static inline var HUD_SIDE_SPACING:Float = 8;
+	static inline var HUD_ELEMENT_SIZE:Int = 16;
 
 	var background:FlxSprite;
 	var tanksDestroyedIcon:FlxSprite;
@@ -24,21 +27,23 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 
 	function setupBackground() {
 		background = new FlxSprite(0, FlxG.height - HUD_HEIGHT);
-		background.makeGraphic(FlxG.width, HUD_HEIGHT, FlxColor.GRAY);
+		background.makeGraphic(FlxG.width, HUD_HEIGHT, HUD_COLOR);
 		add(background);
 	}
 
 	function setupTanksDestroyed() {
 		tanksDestroyedIcon = new FlxSprite(0, 0, AssetPaths.place__png);
-		tanksDestroyedIcon.x = 8;
+		tanksDestroyedIcon.x = HUD_SIDE_SPACING;
 		tanksDestroyedIcon.y = background.y
 			+ (background.height / 2)
 			- (tanksDestroyedIcon.height / 2);
 
 		tanksDestroyedCounter = new FlxText();
 		tanksDestroyedCounter.text = "0";
-		tanksDestroyedCounter.size = 16;
-		tanksDestroyedCounter.x = tanksDestroyedIcon.x + tanksDestroyedIcon.width + 8;
+		tanksDestroyedCounter.size = HUD_ELEMENT_SIZE;
+		tanksDestroyedCounter.x = tanksDestroyedIcon.x
+			+ tanksDestroyedIcon.width
+			+ HUD_SIDE_SPACING;
 		tanksDestroyedCounter.y = tanksDestroyedIcon.getGraphicMidpoint().y
 			- (tanksDestroyedCounter.height / 2);
 		tanksDestroyedCounter.color = FlxColor.RED;
@@ -53,7 +58,7 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		var levelInformation = new FlxText();
 
 		levelInformation.text = "Level " + levelNumber + ": " + levelName;
-		levelInformation.size = 16;
+		levelInformation.size = HUD_ELEMENT_SIZE;
 		levelInformation.x = background.getGraphicMidpoint().x - (levelInformation.width / 2);
 		levelInformation.y = tanksDestroyedCounter.y;
 		levelInformation.color = FlxColor.RED;
@@ -68,12 +73,12 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		var levelTanksInformation = new FlxText();
 
 		levelTanksInformation.text = levelTanksRemain + " / " + levelTanksStart;
-		levelTanksInformation.size = 16;
-		levelTanksInformation.x = FlxG.width - levelTanksInformation.width - 8;
+		levelTanksInformation.size = HUD_ELEMENT_SIZE;
+		levelTanksInformation.x = FlxG.width - levelTanksInformation.width - HUD_SIDE_SPACING;
 		levelTanksInformation.y = tanksDestroyedCounter.y;
 		levelTanksInformation.color = FlxColor.RED;
 
-		levelTanksIcon.x = levelTanksInformation.x - levelTanksIcon.width - 8;
+		levelTanksIcon.x = levelTanksInformation.x - levelTanksIcon.width - HUD_SIDE_SPACING;
 		levelTanksIcon.y = tanksDestroyedIcon.y;
 
 		add(levelTanksIcon);
@@ -81,9 +86,6 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	}
 }
 /**
-	TODO: Move icon and font sizes to static.
-	TODO: Tie HUD_HEIGHT to block size, when the HUD is called for.
-	TODO: Move magic 8s to either static or dynamic.
 	TODO: Replace placeholder images. Not sure on artistic abilities.
 	TODO: Create update Tanks Destroyed function.
 	TODO: Create update Level Number function.
