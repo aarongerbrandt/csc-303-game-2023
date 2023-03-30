@@ -15,7 +15,7 @@ class StartMenuState extends FlxState {
 		super.create();
 
 		var playButton = createMenuButton("Play Game", () -> {
-			FlxG.switchState(new TestGenState());
+			FlxG.switchState(new PlayState());
 		}, 0, -96);
 		add(playButton);
 
