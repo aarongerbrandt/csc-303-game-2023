@@ -32,7 +32,7 @@ class TestGenState extends FlxState {
 		addTanks();
 
 		
-		var hud = new HUD(); // Loading the hud here to test for display.
+		var hud = new HUD();
 		add(hud);
 	}
 

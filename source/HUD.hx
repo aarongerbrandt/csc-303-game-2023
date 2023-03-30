@@ -53,11 +53,11 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	}
 
 	function setupLevelInformation() {
-		var levelNumber:Int = 0;
+		var levelNumber:Int = 1;
 		var levelName:String = "Insert Witty Level Name Here!";
 		var levelInformation = new FlxText();
 
-		levelInformation.text = "Level " + levelNumber + ": " + levelName;
+		levelInformation.text = "Level " + levelNumber + ": Operation " + levelName;
 		levelInformation.size = HUD_ELEMENT_SIZE;
 		levelInformation.x = background.getGraphicMidpoint().x - (levelInformation.width / 2);
 		levelInformation.y = tanksDestroyedCounter.y;
@@ -85,10 +85,11 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		add(levelTanksInformation);
 	}
 }
-/**
-	TODO: Replace placeholder images. Not sure on artistic abilities.
-	TODO: Create update Tanks Destroyed function.
+/**	
 	TODO: Create update Level Number function.
 	TODO: Create Random Level Name Generator function.
 	TODO: Create update Level Enemy Start and Remaining function(s).
+	TODO: Create update Tanks Destroyed function.
+	TODO: Replace placeholder images. Not sure on artistic abilities.
+	TODO: Possiblly move HUD under game instead of on bottom wall.
 **/
