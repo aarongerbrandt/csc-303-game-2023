@@ -4,6 +4,11 @@ class SimpleBullet extends Projectile {
 	private static var RICOCHET_TIMES:Float = 3.0;
 	private static var SPEED = 350;
 
+	override public function new() {
+		super();
+		health = RICOCHET_TIMES;
+	}
+
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 	}

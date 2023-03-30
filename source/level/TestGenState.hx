@@ -5,6 +5,8 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 import level.LevelGenerator;
+import projectile.Projectile;
+import projectile.SimpleBullet;
 import tank.Tank;
 import tank.TankFactory;
 
@@ -19,8 +21,6 @@ class TestGenState extends FlxState {
 
 	private var playerTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
-
-	private var bullets:FlxTypedGroup<FlxGroup>;
 
 	override public function create() {
 		super.create();
@@ -40,30 +40,39 @@ class TestGenState extends FlxState {
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
 
-		FlxG.collide(bullets, map, function onCollision(bullets, map) {
+		FlxG.collide(playerTank.bullets, map, function onCollision(bullets, map) {
 			bullets.impact("map");
 		});
-		FlxG.collide(bullets, playerTank, function onCollision(bullets, playerTank) {
+		FlxG.collide(playerTank.bullets, enemyTanks, function onCollision(bullets, enemyTank) {
 			bullets.impact("tank");
 		});
-		FlxG.collide(bullets, enemyTanks, function onCollision(bullets, enemyTanks) {
+		FlxG.collide(playerTank.bullets, playerTank, function onCollision(bullets, playerTank) {
 			bullets.impact("tank");
 		});
-		FlxG.collide(bullets, bullets, function onCollision(bullets, bullets) {
-			bullets.impact("projectile");
-		});
+
+		for (tank in enemyTanks) {
+			FlxG.collide(tank.bullets, map, function onCollision(bullets, map) {
+				bullets.impact("map");
+			});
+
+			FlxG.collide(tank.bullets, enemyTanks, function onCollision(bullets, enemyTank) {
+				bullets.impact("tank");
+			});
+
+			FlxG.collide(tank.bullets, playerTank, function onCollision(bullets, playerTank) {
+				bullets.impact("tank");
+			});
+		}
 	}
 
 	private function addTanks() {
 		var tankCoordinates = [250, 300, 350];
 		playerTank = TankFactory.NewPlayerTank(500, 500);
-		bullets.add(playerTank.bullets);
 
 		enemyTanks = new FlxTypedGroup<Tank>(3);
 		for (x in tankCoordinates) {
 			var enemy = TankFactory.NewDumbTank(x, 50);
 			enemyTanks.add(enemy);
-			bullets.add(enemy.bullets);
 		}
 
 		add(playerTank.getAllSprites());
