@@ -12,8 +12,8 @@ class TestGenState extends FlxState {
 	private static var TILE_HEIGHT(default, never):Int = 32;
 	private static var TILE_WIDTH(default, never):Int = 32;
 
-	private static var LEVEL_HEIGHT(default, never):Int = 32;
-	private static var LEVEL_WIDTH(default, never):Int = 32;
+	private static var LEVEL_HEIGHT(default, never):Int = 20;
+	private static var LEVEL_WIDTH(default, never):Int = 20;
 
 	private var map:FlxTilemap;
 
@@ -35,6 +35,10 @@ class TestGenState extends FlxState {
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
+
+		// if (FlxG.keys.justPressed.K) {
+		// 	enemyTanks.getFirstAlive().kill();
+		// }
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
@@ -63,10 +67,10 @@ class TestGenState extends FlxState {
 
 	private function checkFinished() {
 		if (enemyTanks.countLiving() <= 0) {
-			// FlxG.switchState(new FinishedLevelState());
+			FlxG.switchState(new FinishedLevelState());
 		}
 		else if (!playerTank.alive) {
-			// FlxG.switchState(new StartMenuState());
+			FlxG.switchState(new StartMenuState());
 		}
 	}
 }
