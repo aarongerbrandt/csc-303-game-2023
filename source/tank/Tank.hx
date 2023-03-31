@@ -107,8 +107,6 @@ class Tank extends FlxSprite {
 
 	override function kill() {
 		cannon.kill();
-		bullets.kill();
-		alive = false;
-		exists = false;
+		super.kill();
 	}
 }
