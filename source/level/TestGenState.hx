@@ -5,11 +5,13 @@ import flixel.FlxState;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
+import flixel.system.debug.watch.Watch;
 import flixel.tile.FlxTilemap;
 import level.LevelGenerator;
 import projectile.Projectile;
-import projectile.Rocket;
 import projectile.SimpleBullet;
+import projectile.rocket.Explosion;
+import projectile.rocket.Rocket;
 import tank.Tank;
 import tank.TankFactory;
 
@@ -25,9 +27,6 @@ class TestGenState extends FlxState {
 	private var playerTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
-	private var testBullet:Rocket;
-	private var testBulletGroup:FlxGroup;
-
 	override public function create() {
 		super.create();
 
@@ -38,8 +37,6 @@ class TestGenState extends FlxState {
 
 		add(map);
 		addTanks();
-
-		initBulletTest();
 	}
 
 	override public function update(elapsed:Float) {
@@ -51,12 +48,6 @@ class TestGenState extends FlxState {
 		doBulletCollision(playerTank.bullets);
 		for (tank in enemyTanks) {
 			doBulletCollision(tank.bullets);
-		}
-
-		doBulletCollision(testBulletGroup);
-
-		if (FlxG.mouse.justPressed) {
-			testBullet.fire(FlxG.mouse.getPosition(), 135);
 		}
 	}
 
@@ -89,12 +80,5 @@ class TestGenState extends FlxState {
 		FlxG.overlap(bullets, null, function onOverlap(bullets, na) {
 			bullets.impact("projectile");
 		});
-	}
-
-	private function initBulletTest() {
-		testBullet = new Rocket();
-		testBulletGroup = new FlxGroup();
-		testBulletGroup.add(testBullet);
-		add(testBullet);
 	}
 }
