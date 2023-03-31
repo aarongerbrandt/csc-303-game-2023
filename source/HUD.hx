@@ -43,7 +43,7 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	}
 
 	function setupTanksDestroyed() {
-		tanksDestroyedIcon = new FlxSprite(0, 0, AssetPaths.place__png);
+		tanksDestroyedIcon = new FlxSprite(0, 0, AssetPaths.explosion__png);
 		tanksDestroyedIcon.x = HUD_SIDE_SPACING;
 		tanksDestroyedIcon.y = background.y
 			+ (background.height / 2)
