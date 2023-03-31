@@ -8,6 +8,7 @@ import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import level.LevelGenerator;
 import projectile.Projectile;
+import projectile.Rocket;
 import projectile.SimpleBullet;
 import tank.Tank;
 import tank.TankFactory;
@@ -24,7 +25,7 @@ class TestGenState extends FlxState {
 	private var playerTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
-	private var testBullet:SimpleBullet;
+	private var testBullet:Rocket;
 	private var testBulletGroup:FlxGroup;
 
 	override public function create() {
@@ -91,7 +92,7 @@ class TestGenState extends FlxState {
 	}
 
 	private function initBulletTest() {
-		testBullet = new SimpleBullet();
+		testBullet = new Rocket();
 		testBulletGroup = new FlxGroup();
 		testBulletGroup.add(testBullet);
 		add(testBullet);
