@@ -2,6 +2,7 @@ package tank;
 
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import lime.system.System;
 import tank.controller.move.IMoveController;
@@ -25,6 +26,7 @@ class Tank extends FlxSprite {
 		initSelf(bodyGraphic);
 		initCannon();
 		initBullets();
+		this.elasticity = 1;
 	}
 
 	private function initSelf(staticGraphic:FlxGraphicAsset) {

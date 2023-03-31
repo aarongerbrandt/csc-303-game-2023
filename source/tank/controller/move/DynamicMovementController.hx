@@ -6,19 +6,17 @@ import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 
 class DynamicMovementController extends BaseController implements IMoveController {
-	private var idleTimerRemaining:Float = 0;
-
-	private static var timerAmount:Int = 3;
-
-	private var timerFinished:Bool = true;
+	private static var targetTank:FlxObject;
+	private static var map:FlxTilemap;
 
 	private static var SPEED:Float = 40;
 
-	private var direction = 1;
+	private static var timerMin:Int = 2;
+	private static var timerMax:Int = 5;
+	private static var noTinyRotations:Array<Int> = [for (i in -15...15) if (i != 0) i];
 
-	private static var targetTank:FlxObject;
-
-	private static var map:FlxTilemap;
+	private var idleTimerRemaining:Float = 0;
+	private var timerFinished:Bool = true;
 
 	private var targetInLineOfSight:Bool;
 
@@ -26,7 +24,7 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		super(controlledTank);
 		targetTank = target;
 		map = tileMap;
-		idleTimerRemaining = timerAmount;
+		idleTimerRemaining = FlxG.random.int(timerMin, timerMax);
 	}
 
 	private function canSeeTarget():Bool {
@@ -43,20 +41,17 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		}
 	}
 
-	private function getNewDirection():FlxPoint {
-		var newDirection:FlxPoint = null;
-		var newX = FlxG.random.int(-1, 1);
-		var newY = FlxG.random.int(-1, 1);
-		trace(newX);
-		trace(newY);
-		return FlxPoint.weak(SPEED * newX, SPEED * newY);
+	private function rotateAmount():FlxPoint {
+		var angle = FlxG.random.int(-45, 45, noTinyRotations);
+
+		return controlledTank.velocity.rotateByDegrees(angle);
 	}
 
 	private function idle():FlxPoint {
 		if (timerFinished) {
 			timerFinished = false;
-			idleTimerRemaining = timerAmount;
-			return getNewDirection();
+			idleTimerRemaining = FlxG.random.int(timerMin, timerMax);
+			return rotateAmount();
 		}
 		else {
 			return controlledTank.velocity;
