@@ -2,6 +2,7 @@ package level;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 import level.LevelGenerator;
 import tank.Tank;
@@ -16,47 +17,56 @@ class TestGenState extends FlxState {
 
 	private var map:FlxTilemap;
 
-	private var targetTank:Tank;
-	private var enemyTank:Tank;
+	private var playerTank:Tank;
+	private var dynamicTank:Tank;
+	private var enemyTanks:FlxTypedGroup<Tank>;
 
 	override public function create() {
 		super.create();
 
-		var gen = new LevelGenerator(20, 20);
-		var bitmap = gen.generateLevel();
+		var bitmap = LevelGenerator.generateLevel(LEVEL_HEIGHT, LEVEL_WIDTH);
 
 		map = new FlxTilemap();
-		trace(bitmap);
 		map.loadMapFrom2DArray(bitmap, AssetPaths.Wall__png, TILE_WIDTH, TILE_HEIGHT);
 
 		add(map);
-
-		targetTank = setUpPlayerTank();
-		enemyTank = setUpDynamicTank(targetTank, map);
-	}
-
-	private function setUpPlayerTank() {
-		var playerTank = TankFactory.NewPlayerTank(100, 50);
-		add(playerTank.getAllSprites());
-		return playerTank;
-	}
-
-	private function setUpDumbTank() {
-		var dumbTank = TankFactory.NewDumbTank(100, 100);
-		add(dumbTank.getAllSprites());
-	}
-
-	private function setUpDynamicTank(target, tileMap) {
-		var dynamicTank = TankFactory.NewDynamicTank(50, 500, targetTank, map);
-		add(dynamicTank.getAllSprites());
-		return dynamicTank;
+		addTanks();
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		FlxG.collide(targetTank, map);
-		FlxG.collide(targetTank, enemyTank);
-		FlxG.collide(enemyTank, map);
+		FlxG.collide(playerTank, map);
+		FlxG.collide(enemyTanks, map);
+		FlxG.collide(dynamicTank, map);
+
+		checkFinished();
+	}
+
+	private function addTanks() {
+		var tankCoordinates = [250, 300, 350];
+		playerTank = TankFactory.NewPlayerTank(500, 500);
+		dynamicTank = TankFactory.NewDynamicTank(50, 500, playerTank, map);
+
+		enemyTanks = new FlxTypedGroup<Tank>(3);
+		for (x in tankCoordinates) {
+			var enemy = TankFactory.NewDumbTank(x, 50);
+			enemyTanks.add(enemy);
+		}
+
+		add(playerTank.getAllSprites());
+		add(dynamicTank.getAllSprites());
+		for (enemyTank in enemyTanks) {
+			add(enemyTank.getAllSprites());
+		}
+	}
+
+	private function checkFinished() {
+		if (enemyTanks.countLiving() <= 0) {
+			// FlxG.switchState(new FinishedLevelState());
+		}
+		else if (!playerTank.alive) {
+			// FlxG.switchState(new StartMenuState());
+		}
 	}
 }
