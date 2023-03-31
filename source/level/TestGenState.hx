@@ -6,10 +6,6 @@ import flixel.tile.FlxTilemap;
 import level.LevelGenerator;
 import tank.Tank;
 import tank.TankFactory;
-import tank.controller.move.DynamicMovementController;
-import tank.controller.move.HorizontalMoveController;
-import tank.controller.shoot.AutoAimController;
-import tank.controller.shoot.SpinShootController;
 
 class TestGenState extends FlxState {
 	private static var TILE_HEIGHT(default, never):Int = 32;
@@ -35,16 +31,8 @@ class TestGenState extends FlxState {
 
 		add(map);
 
-		setUpHorizontalTank();
 		targetTank = setUpPlayerTank();
 		enemyTank = setUpDynamicTank(targetTank, map);
-	}
-
-	private function setUpHorizontalTank() {
-		var tank = new Tank(500, 50);
-		tank.setControllers(new HorizontalMoveController(tank), new SpinShootController(tank));
-		add(tank.getAllSprites());
-		return tank;
 	}
 
 	private function setUpPlayerTank() {
@@ -53,10 +41,13 @@ class TestGenState extends FlxState {
 		return playerTank;
 	}
 
+	private function setUpDumbTank() {
+		var dumbTank = TankFactory.NewDumbTank(100, 100);
+		add(dumbTank.getAllSprites());
+	}
+
 	private function setUpDynamicTank(target, tileMap) {
-		var dynamicTank = new Tank(50, 500);
-		dynamicTank.setControllers(new DynamicMovementController(dynamicTank, target, tileMap),
-			new AutoAimController(dynamicTank, target));
+		var dynamicTank = TankFactory.NewDynamicTank(50, 500, targetTank, map);
 		add(dynamicTank.getAllSprites());
 		return dynamicTank;
 	}

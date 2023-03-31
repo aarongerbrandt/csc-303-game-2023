@@ -6,28 +6,21 @@ import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 
 class DynamicMovementController extends BaseController implements IMoveController {
-	var idleTimerRemaining:Float = 0;
-	var timerAmount:Int = 5;
+	private var idleTimerRemaining:Float = 0;
 
-	private var moveDirection:Float;
-	private var vel:FlxPoint;
+	private static var timerAmount:Int = 3;
+
+	private var timerFinished:Bool = true;
 
 	private static var SPEED:Float = 40;
 
 	private var direction = 1;
-	private var targetTank:FlxObject;
-	private var isIdling:Bool = false;
 
-	private var point:FlxPoint = FlxPoint.weak(100, 100);
+	private static var targetTank:FlxObject;
 
-	var dx:Float;
-	var dy:Float;
+	private static var map:FlxTilemap;
 
-	var map:FlxTilemap;
-
-	var targetInLineOfSight:Bool;
-
-	var timerFinished:Bool = true;
+	private var targetInLineOfSight:Bool;
 
 	public function new(controlledTank:Tank, target:FlxObject, tileMap:FlxTilemap) {
 		super(controlledTank);

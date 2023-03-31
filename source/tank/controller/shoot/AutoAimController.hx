@@ -2,7 +2,7 @@ package tank.controller.shoot;
 
 import flixel.FlxObject;
 import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
+import flixel.tile.FlxTilemap;
 
 class AutoAimController extends BaseController implements IShootController {
 	static inline public var SHOOT_TIMER_MAX = .5;
@@ -11,25 +11,28 @@ class AutoAimController extends BaseController implements IShootController {
 
 	private var rotateBy:Float = 0;
 
-	private var targetTank:FlxObject;
+	private static var targetTank:FlxObject;
 
-	public function new(controlledTank:Tank, target:FlxObject) {
+	static var map:FlxTilemap;
+
+	var targetInLineOfSight:Bool;
+
+	public function new(controlledTank:Tank, target:FlxObject, tileMap:FlxTilemap) {
 		super(controlledTank);
 		targetTank = target;
-	}
-
-	private function distanceToTarget():Float {
-		var dx = (controlledTank.x - targetTank.x);
-		var dy = (controlledTank.y - targetTank.y);
-		return Std.int(FlxMath.vectorLength(dx, dy));
+		map = tileMap;
 	}
 
 	override public function update(elapsed:Float):Void {
-		shootTimerRemaining -= elapsed;
-		rotateBy = controlledTank.getPosition().degreesTo(targetTank.getPosition());
-		if (shouldShoot()) {
-			// shoot bullet if shootShoot true
+		if (shootTimerRemaining > 0) {
+			shootTimerRemaining -= elapsed;
 		}
+		rotateBy = controlledTank.getPosition().degreesTo(targetTank.getPosition());
+	}
+
+	private function canSeeTarget():Bool {
+		targetInLineOfSight = map.ray(controlledTank.getPosition(), targetTank.getPosition());
+		return targetInLineOfSight;
 	}
 
 	public function getAimDegrees():Float {
@@ -37,7 +40,7 @@ class AutoAimController extends BaseController implements IShootController {
 	}
 
 	public function shouldShoot():Bool {
-		if (shootTimerRemaining < 0) {
+		if (shootTimerRemaining <= 0 && canSeeTarget()) {
 			shootTimerRemaining += SHOOT_TIMER_MAX;
 			return true;
 		}
