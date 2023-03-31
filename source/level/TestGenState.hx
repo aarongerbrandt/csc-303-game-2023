@@ -1,5 +1,6 @@
 package level;
 
+import flixel.FlxG;
 import flixel.FlxState;
 import flixel.tile.FlxTilemap;
 import level.LevelGenerator;
@@ -7,7 +8,6 @@ import tank.Tank;
 import tank.TankFactory;
 import tank.controller.move.DynamicMovementController;
 import tank.controller.move.HorizontalMoveController;
-import tank.controller.move.PursuePlayerMovementController;
 import tank.controller.shoot.AutoAimController;
 import tank.controller.shoot.SpinShootController;
 
@@ -18,23 +18,26 @@ class TestGenState extends FlxState {
 	private static var LEVEL_HEIGHT(default, never):Int = 32;
 	private static var LEVEL_WIDTH(default, never):Int = 32;
 
+	private var map:FlxTilemap;
+
+	private var targetTank:Tank;
+	private var enemyTank:Tank;
+
 	override public function create() {
 		super.create();
 
 		var gen = new LevelGenerator(20, 20);
 		var bitmap = gen.generateLevel();
 
-		var map = new FlxTilemap();
+		map = new FlxTilemap();
 		trace(bitmap);
 		map.loadMapFrom2DArray(bitmap, AssetPaths.Wall__png, TILE_WIDTH, TILE_HEIGHT);
 
 		add(map);
 
-		var targetTank = setUpHorizontalTank();
-		// setUpPursuitTank1(targetTank);
-		// setUpPursuitTank2(targetTank);
-		setUpDynamicTank(targetTank, map);
-		setUpPlayerTank();
+		setUpHorizontalTank();
+		targetTank = setUpPlayerTank();
+		enemyTank = setUpDynamicTank(targetTank, map);
 	}
 
 	private function setUpHorizontalTank() {
@@ -47,29 +50,22 @@ class TestGenState extends FlxState {
 	private function setUpPlayerTank() {
 		var playerTank = TankFactory.NewPlayerTank(100, 50);
 		add(playerTank.getAllSprites());
+		return playerTank;
 	}
 
-	/*private function setUpPursuitTank1(targetTank) {
-			var pursuitTank = new Tank(100, 100);
-			pursuitTank.setControllers(new PursuePlayerMovementController(pursuitTank, targetTank),
-				new SpinShootController(pursuitTank));
-			add(pursuitTank.getAllSprites());
-		}
-
-		private function setUpPursuitTank2(targetTank) {
-			var pursuitTank = new Tank(300, 400);
-			pursuitTank.setControllers(new PursuePlayerMovementController(pursuitTank, targetTank),
-				new AutoAimController(pursuitTank, targetTank));
-			add(pursuitTank.getAllSprites());
-	}*/
-	private function setUpDynamicTank(targetTank, tileMap) {
+	private function setUpDynamicTank(target, tileMap) {
 		var dynamicTank = new Tank(50, 500);
-		dynamicTank.setControllers(new DynamicMovementController(dynamicTank, targetTank, tileMap),
-			new AutoAimController(dynamicTank, targetTank));
+		dynamicTank.setControllers(new DynamicMovementController(dynamicTank, target, tileMap),
+			new AutoAimController(dynamicTank, target));
 		add(dynamicTank.getAllSprites());
+		return dynamicTank;
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
+
+		FlxG.collide(targetTank, map);
+		FlxG.collide(targetTank, enemyTank);
+		FlxG.collide(enemyTank, map);
 	}
 }

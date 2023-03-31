@@ -18,7 +18,7 @@ class TestState extends FlxState {
 		var targetTank = setUpHorizontalTank();
 		setUpPursuitTank1(targetTank);
 		setUpPursuitTank2(targetTank);
-		setUpDynamicTank(targetTank);
+		// setUpDynamicTank(targetTank);
 		setUpMouseFollowTanks();
 		setUpPlayerTank();
 	}
@@ -58,13 +58,12 @@ class TestState extends FlxState {
 		add(pursuitTank.getAllSprites());
 	}
 
-	private function setUpDynamicTank(targetTank) {
+	/*private function setUpDynamicTank(targetTank) {
 		var dynamicTank = new Tank(50, 300);
 		dynamicTank.setControllers(new DynamicMovementController(dynamicTank, targetTank),
 			new AutoAimController(dynamicTank, targetTank));
 		add(dynamicTank.getAllSprites());
-	}
-
+	}*/
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 	}

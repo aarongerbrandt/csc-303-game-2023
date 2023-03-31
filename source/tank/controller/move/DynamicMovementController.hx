@@ -1,24 +1,25 @@
 package tank.controller.move;
 
-import flixel.FlxG.random;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 
 class DynamicMovementController extends BaseController implements IMoveController {
-	private var idleTimer:Float = 0;
+	var idleTimerRemaining:Float = 0;
+	var timerAmount:Int = 5;
 
-	public static var SPEED:Float = 50;
+	private var moveDirection:Float;
+	private var vel:FlxPoint;
+
+	private static var SPEED:Float = 40;
 
 	private var direction = 1;
 	private var targetTank:FlxObject;
-	private var idleState:Bool = true;
+	private var isIdling:Bool = false;
 
 	private var point:FlxPoint = FlxPoint.weak(100, 100);
 
-	var distance:Float;
 	var dx:Float;
 	var dy:Float;
 
@@ -26,16 +27,13 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 
 	var targetInLineOfSight:Bool;
 
+	var timerFinished:Bool = true;
+
 	public function new(controlledTank:Tank, target:FlxObject, tileMap:FlxTilemap) {
 		super(controlledTank);
 		targetTank = target;
 		map = tileMap;
-	}
-
-	private function distanceToTarget():Float {
-		var dx = (controlledTank.x - targetTank.x);
-		var dy = (controlledTank.y - targetTank.y);
-		return Std.int(FlxMath.vectorLength(dx, dy));
+		idleTimerRemaining = timerAmount;
 	}
 
 	private function canSeeTarget():Bool {
@@ -43,20 +41,33 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		return targetInLineOfSight;
 	}
 
-	// idleState is true while distance is too big--then false ie "chase" mode when distance is within given range
 	override public function update(elapsed:Float) {
-		// idleState = (distanceToTarget() > 300); // this logic can be changed w line of sight jazz
-		idleState = !(canSeeTarget());
+		idleTimerRemaining -= elapsed;
+		if (!canSeeTarget()) {
+			if (idleTimerRemaining <= 0) {
+				timerFinished = true;
+			}
+		}
+	}
+
+	private function getNewDirection():FlxPoint {
+		var newDirection:FlxPoint = null;
+		var newX = FlxG.random.int(-1, 1);
+		var newY = FlxG.random.int(-1, 1);
+		trace(newX);
+		trace(newY);
+		return FlxPoint.weak(SPEED * newX, SPEED * newY);
 	}
 
 	private function idle():FlxPoint {
-		if (controlledTank.y > FlxG.height - controlledTank.height) {
-			direction = -1;
+		if (timerFinished) {
+			timerFinished = false;
+			idleTimerRemaining = timerAmount;
+			return getNewDirection();
 		}
-		else if (controlledTank.y < 0) {
-			direction = 1;
+		else {
+			return controlledTank.velocity;
 		}
-		return FlxPoint.weak(0, SPEED * direction);
 	}
 
 	private function chase():FlxPoint {
@@ -66,7 +77,7 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 	}
 
 	public function getVelocity():FlxPoint {
-		if (idleState) {
+		if (!canSeeTarget()) {
 			return idle();
 		}
 		else {
