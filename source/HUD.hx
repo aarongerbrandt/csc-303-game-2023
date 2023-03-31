@@ -24,15 +24,16 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	var levelTanksInformation:FlxText;
 	var levelTanksStart:Int;
 	var levelTanksRemain:Int;
+	var levelNumber:Int;
 
-	public function new(NumberEnemyTanksStart:Int) {
+	public function new(NumberEnemyTanksStart:Int, hudLevel:Int) {
 		super();
 
 		levelTanksStart = NumberEnemyTanksStart;
 
 		setupBackground();
 		setupTanksDestroyed();
-		setupLevelInformation();
+		setupLevelInformation(hudLevel);
 		setupLevelTanksInformation();
 	}
 
@@ -66,10 +67,11 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		add(tanksDestroyedCounter);
 	}
 
-	function setupLevelInformation() {
-		var levelNumber:Int = 1;
+	function setupLevelInformation(hudLevel:Int) {
 		var levelName:String = generateLevelName();
 		var levelInformation = new FlxText();
+
+		levelNumber = hudLevel + 1;
 
 		levelInformation.text = "LEVEL " + levelNumber + ": " + levelName;
 		levelInformation.size = HUD_ELEMENT_SIZE;
@@ -125,11 +127,11 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		levelTanksInformation.text = levelTanksRemain + " / " + levelTanksStart;
 	}
 
-	public function updateHudForNextLevel() {
-		// How do I pass the level and score information back to the play state?
+	public function getScore() {}
+
+	public function getLevel() {
+		return levelNumber;
 	}
+
+	public function updateHudForNextLevel() {}
 }
-/**	
-	TODO: Create update Level Number function.
-	TODO: Replace placeholder images. Not sure on artistic abilities.
-**/
