@@ -18,16 +18,22 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	static inline var HUD_TEXT_BORDER_STYLE = OUTLINE;
 
 	var background:FlxSprite;
+	var tanksDestroyed:Int;
 	var tanksDestroyedIcon:FlxSprite;
 	var tanksDestroyedCounter:FlxText;
+	var levelTanksInformation:FlxText;
+	var levelTanksStart:Int;
+	var levelTanksRemain:Int;
 
 	public function new(NumberEnemyTanksStart:Int) {
 		super();
 
+		levelTanksStart = NumberEnemyTanksStart;
+
 		setupBackground();
 		setupTanksDestroyed();
 		setupLevelInformation();
-		setupLevelTanksInformation(NumberEnemyTanksStart);
+		setupLevelTanksInformation();
 	}
 
 	function setupBackground() {
@@ -43,8 +49,9 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 			+ (background.height / 2)
 			- (tanksDestroyedIcon.height / 2);
 
+		tanksDestroyed = 0;
 		tanksDestroyedCounter = new FlxText();
-		tanksDestroyedCounter.text = "0";
+		tanksDestroyedCounter.text = Std.string(tanksDestroyed);
 		tanksDestroyedCounter.size = HUD_ELEMENT_SIZE;
 		tanksDestroyedCounter.x = tanksDestroyedIcon.x
 			+ tanksDestroyedIcon.width
@@ -89,11 +96,12 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		return levelName;
 	}
 
-	function setupLevelTanksInformation(levelTanksStart:Int) {
-		var levelTanksRemain:Int = levelTanksStart;
+	function setupLevelTanksInformation() {
 		var levelTanksIcon = new FlxSprite(0, 0, AssetPaths.place__png);
-		var levelTanksInformation = new FlxText();
 
+		levelTanksRemain = levelTanksStart;
+
+		levelTanksInformation = new FlxText();
 		levelTanksInformation.text = levelTanksRemain + " / " + levelTanksStart;
 		levelTanksInformation.size = HUD_ELEMENT_SIZE;
 		levelTanksInformation.x = FlxG.width - levelTanksInformation.width - HUD_SIDE_SPACING;
@@ -108,9 +116,16 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		add(levelTanksIcon);
 		add(levelTanksInformation);
 	}
+
+	public function registerEnemyTankKill() {
+		tanksDestroyed += 1;
+		levelTanksRemain -= 1;
+
+		tanksDestroyedCounter.text = Std.string(tanksDestroyed);
+		levelTanksInformation.text = levelTanksRemain + " / " + levelTanksStart;
+	}
 }
 /**	
-	TODO: Create update Level Number function.	
-	TODO: Create update Tanks Destroyed function (both remaining and overall).
+	TODO: Create update Level Number function.
 	TODO: Replace placeholder images. Not sure on artistic abilities.
 **/
