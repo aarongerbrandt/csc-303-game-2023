@@ -31,8 +31,7 @@ class TestGenState extends FlxState {
 		add(map);
 		addTanks();
 
-		
-		var hud = new HUD();
+		var hud = new HUD(enemyTanks.length);
 		add(hud);
 	}
 

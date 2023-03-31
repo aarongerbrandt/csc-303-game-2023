@@ -21,13 +21,13 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	var tanksDestroyedIcon:FlxSprite;
 	var tanksDestroyedCounter:FlxText;
 
-	public function new() {
+	public function new(NumberEnemyTanksStart:Int) {
 		super();
 
 		setupBackground();
 		setupTanksDestroyed();
 		setupLevelInformation();
-		setupLevelTanksInformation();
+		setupLevelTanksInformation(NumberEnemyTanksStart);
 	}
 
 	function setupBackground() {
@@ -89,9 +89,8 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		return levelName;
 	}
 
-	function setupLevelTanksInformation() {
-		var levelTanksStart:Int = 0;
-		var levelTanksRemain:Int = 0;
+	function setupLevelTanksInformation(levelTanksStart:Int) {
+		var levelTanksRemain:Int = levelTanksStart;
 		var levelTanksIcon = new FlxSprite(0, 0, AssetPaths.place__png);
 		var levelTanksInformation = new FlxText();
 
@@ -111,10 +110,7 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	}
 }
 /**	
-	TODO: Create update Level Number function.
-	TODO: Create Random Level Name Generator function.
-	TODO: Create update Level Enemy Start and Remaining function(s).
-	TODO: Create update Tanks Destroyed function.
+	TODO: Create update Level Number function.	
+	TODO: Create update Tanks Destroyed function (both remaining and overall).
 	TODO: Replace placeholder images. Not sure on artistic abilities.
-	TODO: Possiblly move HUD under game instead of on bottom wall.
 **/
