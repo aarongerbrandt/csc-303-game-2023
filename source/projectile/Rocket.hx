@@ -1,6 +1,7 @@
 package projectile;
 
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
@@ -42,8 +43,7 @@ class Rocket extends Projectile {
 	}
 
 	override public function impact(surface:String) {
-		// loadGraphic(EXPLOSION PATH HERE);
-		makeGraphic(35, 35, FlxColor.YELLOW);
+		loadGraphic(AssetsPaths.explosion__png);
 		isExploding = true;
 	}
 
