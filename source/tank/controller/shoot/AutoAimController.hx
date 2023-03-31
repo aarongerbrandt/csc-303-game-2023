@@ -1,7 +1,6 @@
 package tank.controller.shoot;
 
 import flixel.FlxObject;
-import flixel.math.FlxMath;
 import flixel.tile.FlxTilemap;
 
 class AutoAimController extends BaseController implements IShootController {
