@@ -97,7 +97,7 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	}
 
 	function setupLevelTanksInformation() {
-		var levelTanksIcon = new FlxSprite(0, 0, AssetPaths.place__png);
+		var levelTanksIcon = new FlxSprite(0, 0, AssetPaths.Enemy_Icon__png);
 
 		levelTanksRemain = levelTanksStart;
 
@@ -123,6 +123,10 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 
 		tanksDestroyedCounter.text = Std.string(tanksDestroyed);
 		levelTanksInformation.text = levelTanksRemain + " / " + levelTanksStart;
+	}
+
+	public function updateHudForNextLevel() {
+		// How do I pass the level and score information back to the play state?
 	}
 }
 /**	

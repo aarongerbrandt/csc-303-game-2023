@@ -20,6 +20,8 @@ class TestGenState extends FlxState {
 	private var playerTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
+	var hud:HUD;
+
 	override public function create() {
 		super.create();
 
@@ -31,16 +33,17 @@ class TestGenState extends FlxState {
 		add(map);
 		addTanks();
 
-		var hud = new HUD(enemyTanks.length);
+		hud = new HUD(enemyTanks.length);
 		add(hud);
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		// if (FlxG.keys.justPressed.K) {
-		// 	enemyTanks.getFirstAlive().kill();
-		// }
+		if (FlxG.keys.justPressed.K) {
+			enemyTanks.getFirstAlive().kill();
+			hud.registerEnemyTankKill();
+		}
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
