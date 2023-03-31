@@ -25,6 +25,7 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		targetTank = target;
 		map = tileMap;
 		idleTimerRemaining = FlxG.random.int(timerMin, timerMax);
+		controlledTank.elasticity = 1;
 	}
 
 	private function canSeeTarget():Bool {

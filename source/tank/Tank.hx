@@ -26,7 +26,6 @@ class Tank extends FlxSprite {
 		initSelf(bodyGraphic);
 		initCannon();
 		initBullets();
-		this.elasticity = 1;
 	}
 
 	private function initSelf(staticGraphic:FlxGraphicAsset) {

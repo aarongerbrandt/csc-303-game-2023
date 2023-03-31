@@ -43,8 +43,6 @@ class TestGenState extends FlxState {
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
-		FlxG.collide(dynamicTank, map);
-		FlxG.collide(pursuitTank, map);
 
 		checkFinished();
 	}
@@ -52,19 +50,20 @@ class TestGenState extends FlxState {
 	private function addTanks() {
 		var tankCoordinates = [250, 300, 350];
 		playerTank = TankFactory.NewPlayerTank(500, 500);
-		dynamicTank = TankFactory.NewDynamicTank(50, 100, playerTank, map);
-		pursuitTank = TankFactory.NewPursuitTank(200, 400, playerTank, map);
 
-		enemyTanks = new FlxTypedGroup<Tank>(3);
+		enemyTanks = new FlxTypedGroup<Tank>();
+		var dynamicTank = TankFactory.NewDynamicTank(50, 100, playerTank, map);
+		var pursuitTank = TankFactory.NewPursuitTank(200, 400, playerTank, map);
+
 		for (x in tankCoordinates) {
 			var enemy = TankFactory.NewDumbTank(x, 50);
 			enemyTanks.add(enemy);
 		}
 
+		enemyTanks.add(dynamicTank);
+		enemyTanks.add(pursuitTank);
+
 		add(playerTank.getAllSprites());
-		add(dynamicTank.getAllSprites());
-		trace("HI");
-		add(pursuitTank.getAllSprites());
 		for (enemyTank in enemyTanks) {
 			add(enemyTank.getAllSprites());
 		}
