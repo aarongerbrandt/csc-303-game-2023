@@ -35,8 +35,14 @@ class TestGenState extends FlxState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
+		// if (FlxG.keys.justPressed.K) {
+		// 	enemyTanks.getFirstAlive().kill();
+		// }
+
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
+
+		checkFinished();
 	}
 
 	private function addTanks() {
@@ -52,6 +58,15 @@ class TestGenState extends FlxState {
 		add(playerTank.getAllSprites());
 		for (enemyTank in enemyTanks) {
 			add(enemyTank.getAllSprites());
+		}
+	}
+
+	private function checkFinished() {
+		if (enemyTanks.countLiving() <= 0) {
+			FlxG.switchState(new FinishedLevelState());
+		}
+		else if (!playerTank.alive) {
+			FlxG.switchState(new StartMenuState());
 		}
 	}
 }

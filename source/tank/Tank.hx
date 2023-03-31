@@ -104,4 +104,11 @@ class Tank extends FlxSprite {
 		cannon.y = y;
 		cannon.angle = aimDegrees;
 	}
+
+	override function kill() {
+		cannon.kill();
+		bullets.kill();
+		alive = false;
+		exists = false;
+	}
 }
