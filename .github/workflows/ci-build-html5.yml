@@ -1,13 +1,14 @@
 name: HTML5 Continuous Integration Build
 run-name: ${{ github.actor }} Build ${{ github.ref }} 
 on: 
-  - push
-  - pull_request_target
+  - pull_request
 jobs:
   Compile-html5:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Build project
         uses: ./.github/actions/build-html5
