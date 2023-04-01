@@ -21,8 +21,14 @@ class TestGenState extends FlxState {
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
 	var hud:HUD;
-	var hudScore:Int;
-	var hudLevel:Int;
+	var score:Int;
+	var level:Int;
+
+	public function new(currentScore:Int = 0, currentLevel:Int = 1) {
+		super();
+		score = currentScore;
+		level = currentLevel;
+	}
 
 	override public function create() {
 		super.create();
@@ -35,7 +41,7 @@ class TestGenState extends FlxState {
 		add(map);
 		addTanks();
 
-		hud = new HUD(enemyTanks.length, hudLevel);
+		hud = new HUD(enemyTanks.length, score, level);
 		add(hud);
 	}
 
@@ -71,8 +77,9 @@ class TestGenState extends FlxState {
 
 	private function checkFinished() {
 		if (enemyTanks.countLiving() <= 0) {
-			hudLevel = hud.getLevel();
-			FlxG.switchState(new FinishedLevelState());
+			score = hud.getScore();
+			level = hud.getLevel();
+			FlxG.switchState(new FinishedLevelState(score, level));
 		}
 		else if (!playerTank.alive) {
 			FlxG.switchState(new StartMenuState());

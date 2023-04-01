@@ -26,13 +26,13 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 	var levelTanksRemain:Int;
 	var levelNumber:Int;
 
-	public function new(NumberEnemyTanksStart:Int, hudLevel:Int) {
+	public function new(NumberEnemyTanksStart:Int, hudScore:Int, hudLevel:Int) {
 		super();
 
 		levelTanksStart = NumberEnemyTanksStart;
 
 		setupBackground();
-		setupTanksDestroyed();
+		setupTanksDestroyed(hudScore);
 		setupLevelInformation(hudLevel);
 		setupLevelTanksInformation();
 	}
@@ -43,14 +43,16 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		add(background);
 	}
 
-	function setupTanksDestroyed() {
+	function setupTanksDestroyed(hudScore) {
+		
+
 		tanksDestroyedIcon = new FlxSprite(0, 0, AssetPaths.explosion__png);
 		tanksDestroyedIcon.x = HUD_SIDE_SPACING;
 		tanksDestroyedIcon.y = background.y
 			+ (background.height / 2)
 			- (tanksDestroyedIcon.height / 2);
 
-		tanksDestroyed = 0;
+		tanksDestroyed = hudScore;
 		tanksDestroyedCounter = new FlxText();
 		tanksDestroyedCounter.text = Std.string(tanksDestroyed);
 		tanksDestroyedCounter.size = HUD_ELEMENT_SIZE;
@@ -71,7 +73,7 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		var levelName:String = generateLevelName();
 		var levelInformation = new FlxText();
 
-		levelNumber = hudLevel + 1;
+		levelNumber = hudLevel;
 
 		levelInformation.text = "LEVEL " + levelNumber + ": " + levelName;
 		levelInformation.size = HUD_ELEMENT_SIZE;
@@ -127,11 +129,13 @@ class HUD extends FlxTypedGroup<FlxSprite> {
 		levelTanksInformation.text = levelTanksRemain + " / " + levelTanksStart;
 	}
 
-	public function getScore() {}
+	public function getScore() {
+		return tanksDestroyed;
+	}
 
 	public function getLevel() {
 		return levelNumber;
 	}
 
-	public function updateHudForNextLevel() {}
+	
 }
