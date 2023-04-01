@@ -11,11 +11,20 @@ class FinishedLevelState extends FlxState {
 	private static var BUTTON_WIDTH(default, never):Int = 256;
 	private static var BUTTON_COLOR(default, never):FlxColor = FlxColor.ORANGE;
 
+	var level:Int;
+	var score:Int;
+
+	public function new(currentScore:Int, finishedLevel:Int) {
+		super();
+		score = currentScore;
+		level = finishedLevel;
+	}
+
 	override public function create() {
 		super.create();
 
 		var replayButton = new FlxButton(0, 0, "Next Level", () -> {
-			FlxG.switchState(new PlayState());
+			FlxG.switchState(new TestGenState(score, level + 1));
 		});
 
 		replayButton.screenCenter();

@@ -22,6 +22,16 @@ class TestGenState extends FlxState {
 	private var pursuitTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
+	var hud:HUD;
+	var score:Int;
+	var level:Int;
+
+	public function new(currentScore:Int = 0, currentLevel:Int = 1) {
+		super();
+		score = currentScore;
+		level = currentLevel;
+	}
+
 	override public function create() {
 		super.create();
 
@@ -32,14 +42,18 @@ class TestGenState extends FlxState {
 
 		add(map);
 		addTanks();
+
+		hud = new HUD(enemyTanks.length, score, level);
+		add(hud);
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		// if (FlxG.keys.justPressed.K) {
-		// 	enemyTanks.getFirstAlive().kill();
-		// }
+		if (FlxG.keys.justPressed.K) {
+			enemyTanks.getFirstAlive().kill();
+			hud.registerEnemyTankKill();
+		}
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
@@ -48,7 +62,7 @@ class TestGenState extends FlxState {
 	}
 
 	private function addTanks() {
-		var tankCoordinates = [250, 300, 350];
+		var tankCoordinates = [250, 300, 350, 400, 450];
 		playerTank = TankFactory.NewPlayerTank(500, 500);
 
 		enemyTanks = new FlxTypedGroup<Tank>();
@@ -71,7 +85,9 @@ class TestGenState extends FlxState {
 
 	private function checkFinished() {
 		if (enemyTanks.countLiving() <= 0) {
-			FlxG.switchState(new FinishedLevelState());
+			score = hud.getScore();
+			level = hud.getLevel();
+			FlxG.switchState(new FinishedLevelState(score, level));
 		}
 		else if (!playerTank.alive) {
 			FlxG.switchState(new StartMenuState());
