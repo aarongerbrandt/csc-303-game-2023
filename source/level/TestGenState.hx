@@ -18,6 +18,8 @@ class TestGenState extends FlxState {
 	private var map:FlxTilemap;
 
 	private var playerTank:Tank;
+	private var dynamicTank:Tank;
+	private var pursuitTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
 
 	var hud:HUD;
@@ -63,11 +65,17 @@ class TestGenState extends FlxState {
 		var tankCoordinates = [250, 300, 350, 400, 450];
 		playerTank = TankFactory.NewPlayerTank(500, 500);
 
-		enemyTanks = new FlxTypedGroup<Tank>(5);
+		enemyTanks = new FlxTypedGroup<Tank>();
+		var dynamicTank = TankFactory.NewDynamicTank(50, 100, playerTank, map);
+		var pursuitTank = TankFactory.NewPursuitTank(200, 400, playerTank, map);
+
 		for (x in tankCoordinates) {
 			var enemy = TankFactory.NewDumbTank(x, 50);
 			enemyTanks.add(enemy);
 		}
+
+		enemyTanks.add(dynamicTank);
+		enemyTanks.add(pursuitTank);
 
 		add(playerTank.getAllSprites());
 		for (enemyTank in enemyTanks) {

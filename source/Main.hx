@@ -9,6 +9,7 @@ class Main extends Sprite {
 		super();
 		// addChild(new FlxGame(0, 0, TestState));
 		// Comment Line 11 and uncomment this line to test level generation
-		addChild(new FlxGame(640, 640, StartMenuState));
+		// addChild(new FlxGame(640, 640, StartMenuState));
+		addChild(new FlxGame(640, 640, TestGenState));
 	}
 }

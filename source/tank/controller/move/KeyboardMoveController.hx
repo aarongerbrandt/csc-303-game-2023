@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 
 class KeyboardMoveController extends BaseController implements IMoveController {
-	public static var MAX_SPEED:Float = 50;
+	public static var MAX_SPEED:Float = 90;
 
 	override public function update(elapsed:Float) {
 		// Screenwrap code
