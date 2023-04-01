@@ -44,3 +44,6 @@ and run the compiled game with
 haxelib run lime run html5
 ```
 The game is built for web, but we also expect the HashLink target `hl` should also work fine if you prefer it instead.
+
+## Attributions
+<a href="https://www.flaticon.com/free-icons/explosion" title="explosion icons">Explosion icons created by Good Ware - Flaticon</a>

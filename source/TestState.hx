@@ -17,6 +17,9 @@ class TestState extends FlxState {
 		setUpHorizontalTank();
 		setUpMouseFollowTanks();
 		setUpPlayerTank();
+
+		var hud = new HUD();
+		add(hud);
 	}
 
 	private function setUpHorizontalTank() {
