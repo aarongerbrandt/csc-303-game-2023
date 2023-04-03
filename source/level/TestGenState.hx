@@ -116,3 +116,4 @@ class TestGenState extends FlxState {
 			}
 		}
 	}
+}
