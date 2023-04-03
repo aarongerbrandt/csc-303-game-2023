@@ -25,7 +25,19 @@ class TestGenState extends FlxState {
 	private var map:FlxTilemap;
 
 	private var playerTank:Tank;
+	private var dynamicTank:Tank;
+	private var pursuitTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
+
+	var hud:HUD;
+	var score:Int;
+	var level:Int;
+
+	public function new(currentScore:Int = 0, currentLevel:Int = 1) {
+		super();
+		score = currentScore;
+		level = currentLevel;
+	}
 
 	override public function create() {
 		super.create();
@@ -37,10 +49,18 @@ class TestGenState extends FlxState {
 
 		add(map);
 		addTanks();
+
+		hud = new HUD(enemyTanks.length, score, level);
+		add(hud);
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
+
+		if (FlxG.keys.justPressed.K) {
+			enemyTanks.getFirstAlive().kill();
+			hud.registerEnemyTankKill();
+		}
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
@@ -49,17 +69,24 @@ class TestGenState extends FlxState {
 		for (tank in enemyTanks) {
 			doBulletCollision(tank.bullets);
 		}
+		checkFinished();
 	}
 
 	private function addTanks() {
-		var tankCoordinates = [250, 300, 350];
+		var tankCoordinates = [250, 300, 350, 400, 450];
 		playerTank = TankFactory.NewPlayerTank(500, 500);
 
-		enemyTanks = new FlxTypedGroup<Tank>(3);
+		enemyTanks = new FlxTypedGroup<Tank>();
+		var dynamicTank = TankFactory.NewDynamicTank(50, 100, playerTank, map);
+		var pursuitTank = TankFactory.NewPursuitTank(200, 400, playerTank, map);
+
 		for (x in tankCoordinates) {
 			var enemy = TankFactory.NewDumbTank(x, 50);
 			enemyTanks.add(enemy);
 		}
+
+		enemyTanks.add(dynamicTank);
+		enemyTanks.add(pursuitTank);
 
 		add(playerTank.getAllSprites());
 		for (enemyTank in enemyTanks) {
@@ -80,5 +107,16 @@ class TestGenState extends FlxState {
 		FlxG.overlap(bullets, null, function onOverlap(bullets, na) {
 			bullets.impact("projectile");
 		});
+	}
+
+	private function checkFinished() {
+		if (enemyTanks.countLiving() <= 0) {
+			score = hud.getScore();
+			level = hud.getLevel();
+			FlxG.switchState(new FinishedLevelState(score, level));
+		}
+		else if (!playerTank.alive) {
+			FlxG.switchState(new StartMenuState());
+		}
 	}
 }

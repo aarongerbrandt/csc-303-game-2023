@@ -2,6 +2,7 @@ package tank;
 
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import lime.system.System;
 import tank.controller.move.IMoveController;
@@ -103,5 +104,10 @@ class Tank extends FlxSprite {
 		cannon.x = x;
 		cannon.y = y;
 		cannon.angle = aimDegrees;
+	}
+
+	override function kill() {
+		cannon.kill();
+		super.kill();
 	}
 }

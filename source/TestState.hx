@@ -5,8 +5,6 @@ import flixel.util.FlxColor;
 import tank.Tank;
 import tank.TankFactory;
 import tank.controller.move.HorizontalMoveController;
-import tank.controller.move.KeyboardMoveController;
-import tank.controller.shoot.MouseShootController;
 import tank.controller.shoot.SpinShootController;
 
 class TestState extends FlxState {
@@ -14,15 +12,19 @@ class TestState extends FlxState {
 		super.create();
 		bgColor = FlxColor.WHITE;
 
-		setUpHorizontalTank();
+		var targetTank = setUpHorizontalTank();
 		setUpMouseFollowTanks();
 		setUpPlayerTank();
+
+		var hud = new HUD();
+		add(hud);
 	}
 
 	private function setUpHorizontalTank() {
 		var tank = new Tank(300, 50);
 		tank.setControllers(new HorizontalMoveController(tank), new SpinShootController(tank));
 		add(tank.getAllSprites());
+		return tank;
 	}
 
 	private function setUpPlayerTank() {
@@ -31,9 +33,9 @@ class TestState extends FlxState {
 	}
 
 	private function setUpMouseFollowTanks() {
-		for (x in 0...35) {
-			for (y in 0...10) {
-				var dumbTank = TankFactory.NewDumbTank(x * 50, y * 50);
+		for (x in 0...7) {
+			for (y in 0...5) {
+				var dumbTank = TankFactory.NewDumbTank(x * 100, y * 100);
 				add(dumbTank.getAllSprites());
 			}
 		}
