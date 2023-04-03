@@ -4,7 +4,6 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 
 class Rocket extends Projectile {
-	private static var SPEED = -25;
 	private static var ACCEL = 1500;
 	private static var RESIZE:Float = 2.5;
 
@@ -17,10 +16,6 @@ class Rocket extends Projectile {
 		super();
 		loadGraphic(ROCKET_GRAPHIC);
 		setSize(RESIZE, RESIZE);
-	}
-
-	override public function update(elapsed:Float) {
-		super.update(elapsed);
 	}
 
 	override public function fire(startPoint:FlxPoint, aimDegrees:Float) {

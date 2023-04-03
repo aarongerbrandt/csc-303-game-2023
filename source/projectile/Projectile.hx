@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 
 class Projectile extends FlxSprite {
-	private static var SPEED:Float = 0;
+	private var speed:Float = 0;
 
 	public function new() {
 		super(FlxG.width, FlxG.height);
@@ -16,14 +16,10 @@ class Projectile extends FlxSprite {
 		super.update(elapsed);
 	}
 
-	private function getSpeed() {
-		return SPEED;
-	}
-
 	public function fire(startPoint:FlxPoint, aimDegrees:Float) {
 		reset(startPoint.x, startPoint.y);
 		var result = FlxPoint.weak(1, 0);
-		velocity = result.rotateByDegrees(aimDegrees).scale(getSpeed());
+		velocity = result.rotateByDegrees(aimDegrees).scale(speed);
 		angle = aimDegrees;
 	}
 
