@@ -107,13 +107,14 @@ class TestGenState extends FlxState {
 		FlxG.overlap(bullets, null, function onOverlap(bullets, na) {
 			bullets.impact("projectile");
 		});
-		private function checkFinished() {
-			if (enemyTanks.countLiving() <= 0) {
-				FlxG.switchState(new FinishedLevelState());
-			}
-			else if (!playerTank.alive) {
-				FlxG.switchState(new StartMenuState());
-			}
+	}
+
+	private function checkFinished() {
+		if (enemyTanks.countLiving() <= 0) {
+			FlxG.switchState(new FinishedLevelState());
+		}
+		else if (!playerTank.alive) {
+			FlxG.switchState(new StartMenuState());
 		}
 	}
 }
