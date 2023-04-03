@@ -111,7 +111,9 @@ class TestGenState extends FlxState {
 
 	private function checkFinished() {
 		if (enemyTanks.countLiving() <= 0) {
-			FlxG.switchState(new FinishedLevelState());
+			score = hud.getScore();
+			level = hud.getLevel();
+			FlxG.switchState(new FinishedLevelState(score, level));
 		}
 		else if (!playerTank.alive) {
 			FlxG.switchState(new StartMenuState());
