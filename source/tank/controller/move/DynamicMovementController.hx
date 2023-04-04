@@ -15,7 +15,7 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 	private static var timerMax:Int = 5;
 	private static var noTinyRotations:Array<Int> = [for (i in -15...15) if (i != 0) i];
 
-	private var idleTimerRemaining:Float = 0;
+	private var idleTimerRemaining:Float = FlxG.random.int(timerMin, timerMax);
 	private var timerFinished:Bool = true;
 
 	private var targetInLineOfSight:Bool;
@@ -42,17 +42,24 @@ class DynamicMovementController extends BaseController implements IMoveControlle
 		}
 	}
 
-	private function rotateAmount():FlxPoint {
+	private inline function rotateAmount(currentVelocity:FlxPoint):FlxPoint {
 		var angle = FlxG.random.int(-45, 45, noTinyRotations);
 
-		return controlledTank.velocity.rotateByDegrees(angle);
+		return currentVelocity.rotateByDegrees(angle);
 	}
 
 	private function idle():FlxPoint {
 		if (timerFinished) {
 			timerFinished = false;
 			idleTimerRemaining = FlxG.random.int(timerMin, timerMax);
-			return rotateAmount();
+
+			var newVelocity = controlledTank.velocity;
+			if (newVelocity.length == 0) {
+				newVelocity = FlxPoint.weak(1, 0)
+					.rotateByDegrees(FlxG.random.float(0, 360))
+					.scale(SPEED);
+			}
+			return rotateAmount(newVelocity);
 		}
 		else {
 			return controlledTank.velocity;
