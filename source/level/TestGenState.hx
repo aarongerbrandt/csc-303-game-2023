@@ -1,6 +1,8 @@
 package level;
 
+import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup;
@@ -22,12 +24,13 @@ class TestGenState extends FlxState {
 	private static var LEVEL_HEIGHT(default, never):Int = 20;
 	private static var LEVEL_WIDTH(default, never):Int = 20;
 
-	private var map:FlxTilemap;
+	public var map:FlxTilemap;
 
 	private var playerTank:Tank;
 	private var dynamicTank:Tank;
 	private var pursuitTank:Tank;
 	private var enemyTanks:FlxTypedGroup<Tank>;
+	private var allProjectiles:FlxGroup;
 
 	var hud:HUD;
 	var score:Int;
@@ -57,18 +60,17 @@ class TestGenState extends FlxState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
+		#if FLX_DEBUG
 		if (FlxG.keys.justPressed.K) {
 			enemyTanks.getFirstAlive().kill();
 			hud.registerEnemyTankKill();
 		}
+		#end
 
 		FlxG.collide(playerTank, map);
 		FlxG.collide(enemyTanks, map);
 
-		doBulletCollision(playerTank.bullets);
-		for (tank in enemyTanks) {
-			doBulletCollision(tank.bullets);
-		}
+		doBulletCollision(allProjectiles);
 		checkFinished();
 	}
 
@@ -88,24 +90,32 @@ class TestGenState extends FlxState {
 		enemyTanks.add(dynamicTank);
 		enemyTanks.add(pursuitTank);
 
+		allProjectiles = new FlxGroup();
+
 		add(playerTank.getAllSprites());
+		playerTank.bullets.forEach(allProjectiles.add);
 		for (enemyTank in enemyTanks) {
 			add(enemyTank.getAllSprites());
+			enemyTank.bullets.forEach(allProjectiles.add);
 		}
 	}
 
-	private function doBulletCollision(bullets:FlxGroup) {
+	private function doBulletCollision(bullets:FlxBasic) {
 		FlxG.collide(bullets, map, function onOverlap(bullets, map) {
 			bullets.impact("wall");
 		});
 		FlxG.overlap(bullets, enemyTanks, function onOverlap(bullets, enemyTank) {
 			bullets.impact("tank");
+			enemyTank.kill();
+			hud.registerEnemyTankKill();
 		});
 		FlxG.overlap(bullets, playerTank, function onOverlap(bullets, playerTank) {
 			bullets.impact("tank");
+			playerTank.kill();
 		});
-		FlxG.overlap(bullets, null, function onOverlap(bullets, na) {
-			bullets.impact("projectile");
+		FlxG.overlap(bullets, null, function onOverlap(bullet1, bullet2) {
+			bullet1.impact("projectile");
+			bullet2.impact("projectile");
 		});
 	}
 

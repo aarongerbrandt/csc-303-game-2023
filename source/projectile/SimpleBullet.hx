@@ -26,7 +26,7 @@ class SimpleBullet extends Projectile {
 			hurt(RICOCHET_TIMES);
 		}
 		if (surface == "projectile") {
-			hurt(2);
+			kill();
 		}
 	}
 }
