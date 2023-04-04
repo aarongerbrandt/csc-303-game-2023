@@ -3,13 +3,25 @@ package projectile;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Projectile extends FlxSprite {
+	static inline public var HITBOX_SIZE_REDUCTION = .5;
+
 	private var speed:Float = 0;
 
-	public function new() {
-		super(FlxG.width, FlxG.height);
+	public function new(graphic:FlxGraphicAsset) {
+		super();
+		loadGraphic(graphic);
+		adjustHitbox();
 		kill();
+	}
+
+	private function adjustHitbox() {
+		var hitboxReduction = width * HITBOX_SIZE_REDUCTION;
+		width -= hitboxReduction;
+		height -= hitboxReduction;
+		offset.add(hitboxReduction / 2, hitboxReduction / 2);
 	}
 
 	override public function update(elapsed:Float) {

@@ -5,17 +5,13 @@ import flixel.math.FlxPoint;
 
 class Rocket extends Projectile {
 	private static var ACCEL = 1500;
-	private static var RESIZE:Float = 2.5;
-
-	private static var ROCKET_GRAPHIC:String = "assets/images/rocket.png";
+	private static var ROCKET_GRAPHIC:String = AssetPaths.rocket__png;
 
 	public var explosion:Explosion;
 
 	override public function new() {
 		explosion = new Explosion();
-		super();
-		loadGraphic(ROCKET_GRAPHIC);
-		setSize(RESIZE, RESIZE);
+		super(ROCKET_GRAPHIC);
 	}
 
 	override public function fire(startPoint:FlxPoint, aimDegrees:Float) {
