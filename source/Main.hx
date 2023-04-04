@@ -1,15 +1,14 @@
 package;
 
 import flixel.FlxGame;
-import level.TestGenState;
+import flixel.FlxObject;
 import openfl.display.Sprite;
 
 class Main extends Sprite {
 	public function new() {
 		super();
-		// addChild(new FlxGame(0, 0, TestState));
-		// Comment Line 11 and uncomment this line to test level generation
-		// addChild(new FlxGame(640, 640, StartMenuState));
-		addChild(new FlxGame(640, 640, TestGenState));
+		// hard-coded separation bias to ensure bullets and such don't pass through walls.
+		FlxObject.SEPARATE_BIAS = 16;
+		addChild(new FlxGame(640, 640, StartMenuState));
 	}
 }
