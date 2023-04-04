@@ -1,18 +1,26 @@
 package tank;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import lime.system.System;
+import flixel.tile.FlxTilemap;
+import level.TestGenState;
+import projectile.Projectile;
+import projectile.SimpleBullet;
 import tank.controller.move.IMoveController;
 import tank.controller.shoot.IShootController;
+#if FLX_DEBUG
+import lime.system.System;
+#end
 
 class Tank extends FlxSprite {
 	static inline public var BAKED_ROTATION_ANGLE_COUNT = 90;
-	static inline public var HITBOX_SIZE_ADJUSTMENT = .35;
+	static inline public var HITBOX_SIZE_REDUCTION = .35;
+	static inline public var BULLET_SPAWN_DISTANCE_MULT = 1.5;
 
-	public var bullets:FlxGroup;
+	public var bullets:FlxTypedGroup<Projectile>;
 	public var cannon:FlxSprite;
 
 	public var aimDegrees:Float = 0;
@@ -30,10 +38,10 @@ class Tank extends FlxSprite {
 
 	private function initSelf(staticGraphic:FlxGraphicAsset) {
 		loadRotatedGraphic(staticGraphic, BAKED_ROTATION_ANGLE_COUNT, -1, false, true);
-		var hitboxAdjustment = width * HITBOX_SIZE_ADJUSTMENT;
-		width -= hitboxAdjustment;
-		height -= hitboxAdjustment;
-		offset.add(hitboxAdjustment / 2, hitboxAdjustment / 2);
+		var hitboxReduction = width * HITBOX_SIZE_REDUCTION;
+		width -= hitboxReduction;
+		height -= hitboxReduction;
+		offset.add(hitboxReduction / 2, hitboxReduction / 2);
 	}
 
 	private function initCannon() {
@@ -48,8 +56,10 @@ class Tank extends FlxSprite {
 	}
 
 	private function initBullets() {
-		bullets = new FlxGroup();
-		// TODO: Generate all Bullet objects
+		bullets = new FlxTypedGroup<Projectile>();
+		for (i in 0...10) {
+			bullets.add(new SimpleBullet());
+		}
 	}
 
 	/**
@@ -93,7 +103,20 @@ class Tank extends FlxSprite {
 		aimDegrees = shootController.getAimDegrees();
 
 		if (shootController.shouldShoot()) {
-			// TODO: Actually implement firing a bullet, to be completed when bullet-shooting is done.
+			var bullet = bullets.getFirstDead();
+			if (bullet != null) {
+				var bulletMidpoint = getMidpoint().addPoint(FlxPoint.weak(width * .75
+					+ bullet.width * .75, 0)
+					.rotateByDegrees(aimDegrees));
+
+				var willOverlapWithMap = cast(FlxG.state, TestGenState)
+					.map.overlapsPoint(bulletMidpoint);
+
+				if (!willOverlapWithMap) {
+					bullet.fire(bulletMidpoint.subtract(bullet.width / 2, bullet.height / 2),
+						aimDegrees);
+				};
+			}
 		}
 
 		super.update(elapsed);

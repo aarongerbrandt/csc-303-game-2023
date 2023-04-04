@@ -8,9 +8,8 @@ class SimpleBullet extends Projectile {
 	private static var BULLET_GRPHIC:FlxGraphicAsset = AssetPaths.bullet__png;
 
 	override public function new() {
-		super();
+		super(BULLET_GRPHIC);
 		speed = 350;
-		loadGraphic(BULLET_GRPHIC);
 		elasticity = 1;
 	}
 
@@ -27,7 +26,7 @@ class SimpleBullet extends Projectile {
 			hurt(RICOCHET_TIMES);
 		}
 		if (surface == "projectile") {
-			hurt(2);
+			kill();
 		}
 	}
 }

@@ -11,8 +11,7 @@ class Explosion extends Projectile {
 	private var explosionTimer:Float;
 
 	override public function new() {
-		super();
-		loadGraphic(EXPLOSION_GRAPHIC);
+		super(EXPLOSION_GRAPHIC);
 	}
 
 	override public function update(elapsed:Float) {

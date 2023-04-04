@@ -1,10 +1,12 @@
 package tank.controller.shoot;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.tile.FlxTilemap;
 
 class AutoAimController extends BaseController implements IShootController {
-	static inline public var SHOOT_TIMER_MAX = .5;
+	static inline public var SHOOT_TIMER_MAX = 1;
+	static inline public var SHOOT_TIMER_MIN = .5;
 
 	private var shootTimerRemaining:Float = SHOOT_TIMER_MAX;
 
@@ -26,11 +28,11 @@ class AutoAimController extends BaseController implements IShootController {
 		if (shootTimerRemaining > 0) {
 			shootTimerRemaining -= elapsed;
 		}
-		rotateBy = controlledTank.getPosition().degreesTo(targetTank.getPosition());
+		rotateBy = controlledTank.getMidpoint().degreesTo(targetTank.getMidpoint());
 	}
 
 	private function canSeeTarget():Bool {
-		targetInLineOfSight = map.ray(controlledTank.getPosition(), targetTank.getPosition());
+		targetInLineOfSight = map.ray(controlledTank.getMidpoint(), targetTank.getMidpoint());
 		return targetInLineOfSight;
 	}
 
@@ -40,7 +42,7 @@ class AutoAimController extends BaseController implements IShootController {
 
 	public function shouldShoot():Bool {
 		if (shootTimerRemaining <= 0 && canSeeTarget()) {
-			shootTimerRemaining += SHOOT_TIMER_MAX;
+			shootTimerRemaining += FlxG.random.float(SHOOT_TIMER_MIN, SHOOT_TIMER_MAX);
 			return true;
 		}
 		return false;
