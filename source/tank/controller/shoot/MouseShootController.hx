@@ -16,7 +16,7 @@ class MouseShootController extends BaseController implements IShootController {
 	}
 
 	public function getAimDegrees():Float {
-		return controlledTank.getPosition().degreesTo(FlxG.mouse.getPosition());
+		return controlledTank.getMidpoint().degreesTo(FlxG.mouse.getPosition());
 	}
 
 	public function shouldShoot():Bool {
