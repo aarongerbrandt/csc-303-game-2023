@@ -26,11 +26,11 @@ class AutoAimController extends BaseController implements IShootController {
 		if (shootTimerRemaining > 0) {
 			shootTimerRemaining -= elapsed;
 		}
-		rotateBy = controlledTank.getPosition().degreesTo(targetTank.getPosition());
+		rotateBy = controlledTank.getMidpoint().degreesTo(targetTank.getMidpoint());
 	}
 
 	private function canSeeTarget():Bool {
-		targetInLineOfSight = map.ray(controlledTank.getPosition(), targetTank.getPosition());
+		targetInLineOfSight = map.ray(controlledTank.getMidpoint(), targetTank.getMidpoint());
 		return targetInLineOfSight;
 	}
 
